@@ -22,7 +22,7 @@ App.Game = function(game) {
     this.enemy;
     this.player;
     this.hud;
-    this.towers;
+    this.towerGroup;
 
     this.towerHeight = 32;
     this.towerWidth  = 32;
@@ -46,7 +46,7 @@ App.Game.prototype = {
         this.enemy.create();
         this.hud.create();
 
-        this.towers = this.game.add.group();
+        this.towerGroup = this.game.add.group();
     },
 
     update: function() {
@@ -72,15 +72,28 @@ App.Game.prototype = {
             this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, length, Phaser.Easing.Linear.None, true);
 
             if (this.player.isInConstructMode) {
-                this.createTower();
+                //this.time.events.add(Phaser.Timer.SECOND * 3, this.constructTower, this);
+                this.constructTower();
             }
         }
     },
 
-    createTower: function () {
-        console.log("create tower");
-        var tower  = this.towers.create(this.input.x - this.towerHeight, this.input.y - this.towerWidth, 'tower');
-        tower.name = 'tower' + this.towers.length;
+    constructTower: function () {
+        // // Get the first dead tower from the towerGroup
+        var newTower = this.towerGroup.getFirstDead();
+
+        // If there aren't any available, create a new one
+        if (newTower === null) {
+            newTower = new App.Tower(this.game);
+            this.towerGroup.add(newTower);
+        }
+
+        // Revive it
+        newTower.revive();
+
+        // Move the tower to the given coordinates
+        newTower.x = this.input.x;
+        newTower.y = this.input.y;
     },
 
     inArena: function () {
