@@ -69,6 +69,7 @@ App.Game.prototype = {
         this.enemyGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
         this.music = this.game.add.audio('theme_relax');
+        this.music.loop = true;
         this.music.play();
     },
 
