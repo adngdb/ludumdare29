@@ -32,8 +32,8 @@ App.Game = function(game) {
 App.Game.prototype = {
 
     preload: function() {
-        this.player = new App.Player(this.game);
-        this.enemy  = new App.Enemy(this.game);
+        this.player = new App.Player(this.game, 100, 100);
+        this.enemy  = new App.Enemy(this.game, 500, 500, this.player);
         this.hud    = new App.HUD(this.game);
     },
 
@@ -42,22 +42,18 @@ App.Game.prototype = {
         this.background.inputEnabled = true;
         this.background.events.onInputDown.add(this.clickListener, this);
 
-        this.player.create();
-        this.enemy.create();
+        this.game.add.existing(this.player);
+        this.game.add.existing(this.enemy);
         this.hud.create();
 
         this.towerGroup = this.game.add.group();
     },
 
     update: function() {
-        this.player.update();
-        this.enemy.update();
         this.hud.update();
     },
 
     render: function() {
-        this.player.render();
-        this.enemy.render();
         this.hud.render();
     },
 
@@ -67,9 +63,9 @@ App.Game.prototype = {
 
     clickListener: function () {
         if (this.inArena()) {
-            var length = Math.sqrt ( (this.input.x - this.player.sprite.x) * (this.input.x - this.player.sprite.x)
-                             + (this.input.y - this.player.sprite.y) * (this.input.y - this.player.sprite.y) ) / 0.3;
-            this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, length, Phaser.Easing.Linear.None, true);
+            var length = Math.sqrt ( (this.input.x - this.player.x) * (this.input.x - this.player.x)
+                             + (this.input.y - this.player.y) * (this.input.y - this.player.y) ) / 0.3;
+            this.game.add.tween(this.player).to( { x: this.input.x, y: this.input.y }, length, Phaser.Easing.Linear.None, true);
 
             if (this.player.isInConstructMode) {
                 //this.time.events.add(Phaser.Timer.SECOND * 3, this.constructTower, this);

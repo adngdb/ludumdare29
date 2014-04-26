@@ -1,36 +1,28 @@
-App.Player = function(game) {
+App.Player = function(game, x, y) {
+    Phaser.Sprite.call(this, game, x, y, 'player');
 
     this.game = game;
     this.isInConstructMode;
+
+    this.scale.x = 0.5;
+    this.scale.y = 0.5;
+    this.anchor.setTo(0.5, 0.5);
+
+    this.isInConstructMode = false;
+
+    var key= this.game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
+    key.onDown.add(this.activateConstructMode, this);
+    key.onUp.add(this.deactivateConstructMode, this);
 };
 
-App.Player.prototype = {
+// Player is a type of Phaser.Sprite
+App.Player.prototype = Object.create(Phaser.Sprite.prototype);
+App.Player.prototype.constructor = App.Player;
 
-    create: function() {
-        this.sprite = this.game.add.sprite(100, 100, 'player');
-        this.sprite.scale.x = 0.5;
-        this.sprite.scale.y = 0.5;
-        this.sprite.anchor.setTo(0.5, 0.5);
+App.Player.prototype.activateConstructMode = function() {
+    this.isInConstructMode = true;
+};
 
-        this.isInConstructMode = false;
-
-        var key= this.game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
-        key.onDown.add(this.activateConstructMode, this);
-        key.onUp.add(this.deactivateConstructMode, this);
-    },
-
-    update: function() {
-
-    },
-
-    render: function() {
-    },
-
-    activateConstructMode: function() {
-        this.isInConstructMode = true;
-    },
-
-    deactivateConstructMode: function() {
-        this.isInConstructMode = false;
-    }
+App.Player.prototype.deactivateConstructMode = function() {
+    this.isInConstructMode = false;
 };

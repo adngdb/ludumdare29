@@ -14,6 +14,7 @@ App.Preloader.prototype = {
         this.load.image('player', 'assets/gfx/player.png');
         this.load.image('background', 'assets/gfx/background.png');
         this.load.image('tower', 'assets/gfx/tower.png');
+        this.load.image('enemy', 'assets/gfx/enemy.png');
     },
 
     create: function() {
