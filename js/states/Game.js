@@ -21,40 +21,41 @@ App.Game = function(game) {
 
     this.enemy;
     this.player;
-    // this.level;
     this.hud;
+    this.towers;
+
+    this.towerHeight = 32;
+    this.towerWidth  = 32;
 
 };
 
 App.Game.prototype = {
 
     preload: function() {
-        // this.level  = new App.Level(this.game);
         this.player = new App.Player(this.game);
         this.enemy  = new App.Enemy(this.game);
         this.hud    = new App.HUD(this.game);
     },
 
     create: function() {
-        // this.level.create();
         this.background = this.game.add.sprite(0, 0, 'background');
         this.background.inputEnabled = true;
-        this.background.events.onInputDown.add(this.movePlayer, this);
+        this.background.events.onInputDown.add(this.clickListener, this);
+
         this.player.create();
         this.enemy.create();
         this.hud.create();
-        this.game.physics.enable(this.player.sprite, Phaser.Physics.ARCADE);
+
+        this.towers = this.game.add.group();
     },
 
     update: function() {
-        // this.level.update();
         this.player.update();
         this.enemy.update();
         this.hud.update();
     },
 
     render: function() {
-        // this.level.render();
         this.player.render();
         this.enemy.render();
         this.hud.render();
@@ -64,8 +65,26 @@ App.Game.prototype = {
         this.state.start('MainMenu');
     },
 
-    movePlayer: function () {
-        this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, 2000, Phaser.Easing.Linear.None, true);
-    }
+    clickListener: function () {
+        if (this.inArena(this.game.input.position)) {
+            this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, 2000, Phaser.Easing.Linear.None, true);
 
+            if (this.player.isInConstructMode) {
+                this.createTower();
+            }
+        }
+    },
+
+    createTower: function () {
+        console.log("create tower");
+        console.log(this.towers.length);
+        var tower  = this.towers.create(position.x - this.towerHeight, position.y - this.towerWidth, 'tower');
+        tower.name = 'tower' + this.towers.length;
+    },
+
+    inArena: function (position) {
+        var inArena = false;
+
+        return inArena;
+    }
 };
