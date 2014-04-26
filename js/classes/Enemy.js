@@ -26,7 +26,7 @@ App.Enemy.prototype.constructor = App.Enemy;
 App.Enemy.prototype.update = function() {
     // This enemy moves towards the player constantly. It won't try to
     // attack towers.
-
+    if (!this.exists) return;
     // If the enemy is close enough to its target.
     if (this.game.physics.arcade.distanceBetween(this, this.target) <= this.REACH_DISTANCE) {
         // Stop movement.
