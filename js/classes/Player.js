@@ -10,6 +10,7 @@ App.Player.prototype = {
         this.sprite = this.game.add.sprite(100, 100, 'player');
         this.sprite.scale.x = 0.5;
         this.sprite.scale.y = 0.5;
+        this.sprite.anchor.setTo(0.5, 0.5);
 
         this.isInConstructMode = false;
 
