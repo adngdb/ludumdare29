@@ -122,7 +122,7 @@ App.Game.prototype = {
     },
 
     createNewWave: function() {
-        for (var i=0; i<5; i++) {
+        for (var i=0; i<10; i++) {
             var newEnemy = this.enemyGroup.getFirstDead();
             var param = Math.random();
             var newX = this.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);

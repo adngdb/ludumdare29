@@ -28,7 +28,7 @@ App.Tower.prototype.update = function() {
         var next = false;
         var index = 0;
         while(target != -1 && !next) {
-            if (this.game.physics.arcade.distanceBetween(this, target) < this.REACH_DISTANCE)
+            if ((this.game.physics.arcade.distanceBetween(this, target) < this.REACH_DISTANCE) && target.exists)
                 next = true;
             else
                 target = this.enemyGroup.getAt(++index);
