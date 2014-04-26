@@ -67,7 +67,9 @@ App.Game.prototype = {
 
     clickListener: function () {
         if (this.inArena()) {
-            this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, 2000, Phaser.Easing.Linear.None, true);
+            var length = Math.sqrt ( (this.input.x - this.player.sprite.x) * (this.input.x - this.player.sprite.x)
+                             + (this.input.y - this.player.sprite.y) * (this.input.y - this.player.sprite.y) ) / 0.3;
+            this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, length, Phaser.Easing.Linear.None, true);
 
             if (this.player.isInConstructMode) {
                 this.createTower();
