@@ -21,35 +21,38 @@ App.Game = function(game) {
 
     this.enemy;
     this.player;
-    this.level;
+    // this.level;
     this.hud;
 };
 
 App.Game.prototype = {
 
     preload: function() {
-        this.level  = new App.Level(this.game);
+        // this.level  = new App.Level(this.game);
         this.player = new App.Player(this.game);
         this.enemy  = new App.Enemy(this.game);
         this.hud    = new App.HUD(this.game);
     },
 
     create: function() {
-        this.level.create();
+        // this.level.create();
+        this.background = this.game.add.sprite(0, 0, 'background');
+        this.background.inputEnabled = true;
+        this.background.events.onInputDown.add(this.movePlayer, this);
         this.player.create();
         this.enemy.create();
         this.hud.create();
     },
 
     update: function() {
-        this.level.update();
+        // this.level.update();
         this.player.update();
         this.enemy.update();
         this.hud.update();
     },
 
     render: function() {
-        this.level.render();
+        // this.level.render();
         this.player.render();
         this.enemy.render();
         this.hud.render();
@@ -57,6 +60,12 @@ App.Game.prototype = {
 
     quitGame: function(pointer) {
         this.state.start('MainMenu');
+    },
+
+    movePlayer: function () {
+        console.log("ICI");
+        this.game.add.tween(this.player).to( { x: '+300' }, 2000, Phaser.Easing.Linear.None, true);
+        // this.player.add.tween(sprite).to({ x: 600 }, 2000, Phaser.Easing.Linear.None);
     }
 
 };
