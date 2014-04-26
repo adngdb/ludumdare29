@@ -45,13 +45,14 @@ App.Game = function(game) {
 App.Game.prototype = {
 
     preload: function() {
-        this.player = new App.Player(this.game, 100, 100);
-        this.enemy  = new App.Enemy(this.game, 500, 500, this.player);
+        this.player = new App.Player(this.game, this.game.world.width / 2, this.game.world.height / 2);
+        // this.enemy  = new App.Enemy(this.game, 500, 500, this.player);
         this.hud    = new App.HUD(this.game, this.player);
     },
 
     create: function() {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.game.physics.arcade.forceX = true;
 
         this.background = this.game.add.sprite(0, 0, 'background');
         this.background.inputEnabled = true;
@@ -100,9 +101,10 @@ App.Game.prototype = {
             }
         }
 
-        this.game.physics.arcade.collide(this.player, this.towerGroup, this.player.collisionWithTower, null, this);
-        this.game.physics.arcade.collide(this.player, this.enemyGroup, this.player.collisionWithEnemy, null, this);
-        this.game.physics.arcade.collide(this.player, this.enemy, this.player.collisionWithEnemy, null, this);
+        this.game.physics.arcade.collide(this.player, this.enemyGroup);
+        this.game.physics.arcade.collide(this.player, this.towerGroup);
+        this.game.physics.arcade.collide(this.enemyGroup, this.towerGroup);
+        this.game.physics.arcade.collide(this.enemyGroup, this.enemyGroup);
 
         this.hud.update();
 
@@ -142,9 +144,7 @@ App.Game.prototype = {
         }
 
         if (this.inArena()) {
-            var length = Math.sqrt ( (this.input.x - this.player.x) * (this.input.x - this.player.x)
-                             + (this.input.y - this.player.y) * (this.input.y - this.player.y) ) / 0.3;
-            this.game.add.tween(this.player).to( { x: this.input.x, y: this.input.y }, length, Phaser.Easing.Linear.None, true);
+            this.player.destination.setTo( this.input.x, this.input.y);
 
             if (this.player.isInConstructMode) {
                 //this.time.events.add(Phaser.Timer.SECOND * 3, this.constructTower, this);

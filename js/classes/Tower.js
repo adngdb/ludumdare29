@@ -13,7 +13,8 @@ App.Tower = function(game, x, y, type, enemyGroup) {
 
     // Enable physics on the tower
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
-    this.body.immovable  = true;
+    // this.body.immovable = true;
+    this.body.moves = false;
 
     this.lastAttack = null;
 };
@@ -29,10 +30,12 @@ App.Tower.prototype.update = function() {
         var next = false;
         var index = 0;
         while(target != -1 && !next) {
-            if (target.exists && (this.game.physics.arcade.distanceBetween(this, target) < this.REACH_DISTANCE))
+            if (target.exists && this.game.physics.arcade.distanceBetween(this, target) < this.REACH_DISTANCE) {
                 next = true;
-            else
+            }
+            else {
                 target = this.enemyGroup.getAt(++index);
+            }
         }
 
         if (target != -1) {
@@ -40,5 +43,4 @@ App.Tower.prototype.update = function() {
             this.lastAttack = this.game.time.now;
         }
     }
-
 }
