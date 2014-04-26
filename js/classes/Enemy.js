@@ -48,8 +48,4 @@ App.Enemy.prototype.update = function() {
 
 App.Enemy.prototype.hurt = function (damages) {
     this.health -= damages;
-
-    if (this.health <= 0) {
-        this.kill();
-    }
 };

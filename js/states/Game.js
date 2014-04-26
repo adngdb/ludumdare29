@@ -34,10 +34,12 @@ App.Game = function(game) {
     this.RadiusX = this.centerX - 80;
     this.RadiusY = this.centerY - 120;
 
-    this.waveTimer = null;
-    this.numberEnemy = 5;
+    this.waveTimer;
+    this.numberEnemy;
     this.lastWave;
-    this.waveCooldown = 5;
+    this.waveCooldown;
+
+    this.score;
 };
 
 App.Game.prototype = {
@@ -56,7 +58,7 @@ App.Game.prototype = {
         this.background.events.onInputDown.add(this.clickListener, this);
 
         var cKey = this.game.input.keyboard.addKey(Phaser.Keyboard.C);
-        cKey.onDown.add(this.createNewWave, this);
+        cKey.onDown.add(this.createEnemy, this);
 
         var cancelConstruction = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         cancelConstruction.onDown.add(this.cancelConstruction, this);
@@ -81,12 +83,21 @@ App.Game.prototype = {
         this.numberEnemy = 5;
         this.waveCooldown = 5;
         this.lastWave = this.game.time.now;
+
+        this.score = 0;
     },
 
     update: function() {
         if (this.player.health <= 0) {
-            console.log('noooooooooooooo DEAD!!!');
-            this.state.start('DeathMenu');
+            this.state.start('DeathMenu', true, false, this.score);
+        }
+        for (var i = this.enemyGroup.length-1; i>=0; i--)
+        {
+            var currEnemy = this.enemyGroup.getAt(i);
+            if (currEnemy.exists && (currEnemy.health <= 0) ){
+                this.score++;
+                currEnemy.kill();
+            }
         }
 
         this.game.physics.arcade.collide(this.player, this.towerGroup, this.player.collisionWithTower, null, this);
