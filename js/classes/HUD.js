@@ -10,7 +10,7 @@ App.HUD.prototype = {
         this.muteSound();
 
         this.chooseTowerButton = this.game.add.button(this.game.width / 2, 15, 'buttonTower1', this.chooseTower, this);
-        this.chooseTowerButton.type = 'pouet';
+        this.chooseTowerButton.type = 'tower';
     },
 
     update: function() {

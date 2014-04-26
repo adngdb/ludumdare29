@@ -77,6 +77,20 @@ App.Game.prototype = {
         this.game.physics.arcade.collide(this.player, this.enemy, this.player.collisionWithEnemy, null, this);
 
         this.hud.update();
+
+        if (this.player.isInConstructMode) {
+            if (null == this.choosenTowerType) {
+                this.choosenTowerType = this.game.add.sprite(this.input.x, this.input.y, this.player.towerTypeToConstruct);
+                this.choosenTowerType.anchor.setTo(0.5, 0.5);
+            }
+            this.choosenTowerType.x = this.input.x;
+            this.choosenTowerType.y = this.input.y;
+        }
+        else {
+            if (null != this.choosenTowerType) {
+                this.choosenTowerType.destroy();
+            }
+        }
     },
 
     render: function() {
@@ -106,7 +120,7 @@ App.Game.prototype = {
 
         // If there aren't any available, create a new one
         if (newTower === null) {
-            newTower = new App.Tower(this.game, this.input.x, this.input.y, this.choosenTowerType, this.enemyGroup);
+            newTower = new App.Tower(this.game, this.input.x, this.input.y, this.player.towerTypeToConstruct, this.enemyGroup);
             this.towerGroup.add(newTower);
         }
         else {
