@@ -10,6 +10,9 @@ App.Preloader.prototype = {
         this.preloadBar = this.add.sprite(this.world.width - (this.world.width / 2) - 150, 50, 'preloaderBar');
 
         this.load.setPreloadSprite(this.preloadBar);
+
+        this.load.image('player', 'assets/gfx/player.png');
+
     },
 
     create: function() {
