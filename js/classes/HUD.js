@@ -11,6 +11,14 @@ App.HUD.prototype = {
 
         this.chooseTowerButton = this.game.add.button(this.game.width / 2, 15, 'buttonTower1', this.chooseTower, this);
         this.chooseTowerButton.type = 'tower';
+
+        var tKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
+        tKey.onDown.add(this.shortcutChooseTower, this);
+
+        var text  = "T";
+        var style = { font: "16px Arial", fill: "white", align: "center" };
+        var towerShortcut = this.game.add.text(this.chooseTowerButton.x + 18, this.chooseTowerButton.y + 45, text, style);
+        towerShortcut.anchor.set(0.5);
     },
 
     update: function() {
@@ -43,5 +51,13 @@ App.HUD.prototype = {
 
     chooseTower: function(element) {
         this.player.setChoosenTowerType(element.type);
+    },
+
+    shortcutChooseTower: function(key) {
+        switch(key.keyCode) {
+            case Phaser.Keyboard.T:
+                this.chooseTower({'type' : 'tower'});
+                break;
+        }
     }
 };
