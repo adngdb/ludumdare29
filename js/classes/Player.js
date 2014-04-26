@@ -1,8 +1,6 @@
 App.Player = function(game) {
 
     this.game = game;
-    this.targetX;
-    this.targetY;
     this.isInConstructMode;
 };
 
@@ -28,12 +26,10 @@ App.Player.prototype = {
     },
 
     activateConstructMode: function() {
-        console.log('true');
         this.isInConstructMode = true;
     },
 
     deactivateConstructMode: function() {
-        console.log('false');
         this.isInConstructMode = false;
     }
 };
