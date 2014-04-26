@@ -16,6 +16,9 @@ App.Preloader.prototype = {
         this.load.image('tower', 'assets/gfx/tower.png');
         this.load.image('enemy', 'assets/gfx/enemy.png');
         this.load.audio('theme_relax', 'assets/sfx/theme_main_relax.ogg');
+        this.load.audio('theme_fight', 'assets/sfx/theme_main_fight.ogg');
+        this.load.audio('footstep', 'assets/sfx/player_footstep.ogg');
+        this.load.audio('enemyAttack', 'assets/sfx/ennemy_attack_pig.ogg');
 
     },
 

@@ -15,6 +15,8 @@ App.Enemy = function(game, x, y, target) {
 
     this.lastAttack = null;
     this.health = 10;
+
+    this.sound = this.game.add.audio('enemyAttack');
 };
 
 // Enemies are a type of Phaser.Sprite
@@ -35,6 +37,7 @@ App.Enemy.prototype.update = function() {
         if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
             this.target.hurt(this.DAMAGES_TO_PLAYER);
             this.lastAttack = this.game.time.now;
+            this.sound.play();
         }
     }
     else {

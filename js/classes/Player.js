@@ -11,14 +11,21 @@ App.Player = function (game, x, y) {
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.immovable = true;
 
+    this.sound = this.game.add.audio('footstep');
+    this.sound.loop = true;
+    // this.sound.play();
+
     // Health of the player.
-    // The game is lost is that number goes under zero.
+    // The game is lost if that number goes under zero.
     this.health = 100;
 };
 
 // Player is a type of Phaser.Sprite
 App.Player.prototype = Object.create(Phaser.Sprite.prototype);
 App.Player.prototype.constructor = App.Player;
+
+App.Player.prototype.update = function () {
+};
 
 App.Player.prototype.activateConstructMode = function () {
     this.isInConstructMode = true;
