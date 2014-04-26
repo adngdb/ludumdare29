@@ -63,10 +63,13 @@ App.Game.prototype = {
         this.towerGroup = this.game.add.group();
         this.towerGroup.enableBody = true;
         this.towerGroup.physicsBodyType = Phaser.Physics.ARCADE;
-        
+
         this.enemyGroup = this.game.add.group();
         this.enemyGroup.enableBody = true;
         this.enemyGroup.physicsBodyType = Phaser.Physics.ARCADE;
+
+        this.music = this.game.add.audio('theme_relax');
+        this.music.play();
     },
 
     update: function() {

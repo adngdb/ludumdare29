@@ -15,6 +15,8 @@ App.Preloader.prototype = {
         this.load.image('background', 'assets/gfx/background.png');
         this.load.image('tower', 'assets/gfx/tower.png');
         this.load.image('enemy', 'assets/gfx/enemy.png');
+        this.load.audio('theme_relax', 'assets/sfx/theme_main_relax.ogg');
+
     },
 
     create: function() {
