@@ -1,4 +1,4 @@
-Chopper.Game = function(game) {
+App.Game = function(game) {
 
     //When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
     this.game;      //a reference to the currently running game
@@ -25,13 +25,13 @@ Chopper.Game = function(game) {
     this.hud;
 };
 
-Chopper.Game.prototype = {
+App.Game.prototype = {
 
     preload: function() {
-        this.level  = new Chopper.Level(this.game);
-        this.player = new Chopper.Player(this.game);
-        this.enemy  = new Chopper.Enemy(this.game);
-        this.hud    = new Chopper.HUD(this.game);
+        this.level  = new App.Level(this.game);
+        this.player = new App.Player(this.game);
+        this.enemy  = new App.Enemy(this.game);
+        this.hud    = new App.HUD(this.game);
     },
 
     create: function() {
@@ -39,32 +39,20 @@ Chopper.Game.prototype = {
         this.player.create();
         this.enemy.create();
         this.hud.create();
-
-        this.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_PLATFORMER);
     },
 
     update: function() {
         this.level.update();
         this.player.update();
-        this.enemy.update(this.player.sprite);
+        this.enemy.update();
         this.hud.update();
-
-        this.physics.collide(this.player.sprite, this.level.layer);
-        this.physics.collide(this.enemy.tankSprite, this.level.layer);
     },
 
     render: function() {
         this.level.render();
         this.player.render();
         this.enemy.render();
-        this.hud.render()
-
-        this.game.debug.renderInputInfo(32,410);
-        this.game.debug.renderText("Sound " + !this.sound._muted, 150, 410);
-        this.game.debug.renderCameraInfo(this.camera, 300, 410);
-
-        this.game.debug.renderPhysicsBody(this.player.sprite.body);
-        this.game.debug.renderPhysicsBody(this.enemy.tankSprite.body);
+        this.hud.render();
     },
 
     quitGame: function(pointer) {
