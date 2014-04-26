@@ -4,8 +4,6 @@ App.Player = function(game, x, y) {
     this.game = game;
     this.isInConstructMode;
 
-    this.scale.x = 0.5;
-    this.scale.y = 0.5;
     this.anchor.setTo(0.5, 0.5);
 
     this.isInConstructMode = false;
