@@ -34,6 +34,10 @@ App.Game = function(game) {
     this.RadiusX = this.centerX - 80;
     this.RadiusY = this.centerY - 120;
 
+    this.waveTimer = null;
+    this.numberEnemy = 5;
+    this.lastWave;
+    this.waveCooldown = 5;
 };
 
 App.Game.prototype = {
@@ -58,7 +62,7 @@ App.Game.prototype = {
         cancelConstruction.onDown.add(this.cancelConstruction, this);
 
         this.game.add.existing(this.player);
-        this.game.add.existing(this.enemy);
+        // this.game.add.existing(this.enemy);
         this.hud.create();
 
         this.towerGroup = this.game.add.group();
@@ -72,6 +76,8 @@ App.Game.prototype = {
         this.music = this.game.add.audio('theme_relax');
         this.music.loop = true;
         this.music.play();
+
+        this.lastWave = this.game.time.now;
     },
 
     update: function() {
@@ -94,6 +100,11 @@ App.Game.prototype = {
             if (null != this.choosenTowerType) {
                 this.choosenTowerType = null;
             }
+        }
+        if (!this.lastWave || this.game.time.elapsedSecondsSince(this.lastWave) > this.waveCooldown) {
+            this.createNewWave();
+            this.waveCooldown = 5 + this.numberEnemy * 0.5;
+            this.lastWave = this.game.time.now;
         }
     },
 
@@ -152,20 +163,26 @@ App.Game.prototype = {
     },
 
     createNewWave: function() {
-        for (var i=0; i<10; i++) {
-            var newEnemy = this.enemyGroup.getFirstDead();
-            var param = Math.random();
-            var newX = this.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);
-            var newY = this.centerY + (this.RadiusY + 50) * Math.sin(param * 2 * Math.PI);
-            if (newEnemy === null) {
-                newEnemy = new App.Enemy(this.game, newX, newY, this.player);
-                this.enemyGroup.add(newEnemy);
-            }
-            else {
-                newEnemy.x = newX;
-                newEnemy.y = newY;
-                newEnemy.revive();
-            }
+        if (this.waveTimer !== null) this.waveTimer.destroy();
+        this.waveTimer = this.game.time.create();
+        this.waveTimer.repeat(500, this.numberEnemy, this.createEnemy, this);
+        this.waveTimer.start();
+        this.numberEnemy += 5;
+    },
+
+    createEnemy: function() {
+        var newEnemy = this.enemyGroup.getFirstDead();
+        var param = Math.random();
+        var newX = this.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);
+        var newY = this.centerY + (this.RadiusY + 50) * Math.sin(param * 2 * Math.PI);
+        if (newEnemy === null) {
+            newEnemy = new App.Enemy(this.game, newX, newY, this.player);
+            this.enemyGroup.add(newEnemy);
+        }
+        else {
+            newEnemy.x = newX;
+            newEnemy.y = newY;
+            newEnemy.revive();
         }
     },
 
@@ -176,10 +193,6 @@ App.Game.prototype = {
 
         var det = (relX / this.RadiusX) * (relX / this.RadiusX) + (relY / this.RadiusY) * (relY / this.RadiusY);
 
-        if (det <= 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return (det <= 1);
     }
 };
