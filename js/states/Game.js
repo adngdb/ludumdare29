@@ -65,10 +65,7 @@ App.Game.prototype = {
     },
 
     movePlayer: function () {
-        // this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, 2000, Phaser.Easing.Linear.None, true);
-        this.player.targetX = this.input.x;
-        this.player.targetY = this.input.y;
-        this.game.physics.arcade.moveToXY(this.player.sprite, this.player.targetX, this.player.targetY, 200);
+        this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, 2000, Phaser.Easing.Linear.None, true);
     }
 
 };
