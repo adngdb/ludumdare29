@@ -18,6 +18,12 @@ App.Preloader.prototype = {
     },
 
     create: function() {
+        var tween = this.add.tween(this.preloadBar)
+            .to({alpha: 0}, 500, Phaser.Easing.Linear.None, true);
+        tween.onComplete.add(this.startGame, this);
+    },
+
+    startGame: function() {
         this.game.state.start('MainMenu');
     }
 
