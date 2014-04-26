@@ -15,6 +15,7 @@ App.Boot.prototype = {
     },
 
     create: function () {
+        this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
 
         //  Unless you specifically know your game needs to support multi-touch I would recommend setting this to 1
         this.input.maxPointers = 1;

@@ -54,6 +54,9 @@ App.Game.prototype = {
         var cKey = this.game.input.keyboard.addKey(Phaser.Keyboard.C);
         cKey.onDown.add(this.createNewWave, this);
 
+        var cancelConstruction = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+        cancelConstruction.onDown.add(this.cancelConstruction, this);
+
         this.game.add.existing(this.player);
         this.game.add.existing(this.enemy);
         this.hud.create();
@@ -102,7 +105,11 @@ App.Game.prototype = {
         this.state.start('MainMenu');
     },
 
-    clickListener: function () {
+    clickListener: function (element, pointer) {
+        if (Phaser.Mouse.RIGHT_BUTTON == this.input.mouse.button) {
+            this.cancelConstruction();
+        }
+
         if (this.inArena()) {
             var length = Math.sqrt ( (this.input.x - this.player.x) * (this.input.x - this.player.x)
                              + (this.input.y - this.player.y) * (this.input.y - this.player.y) ) / 0.3;
@@ -134,6 +141,14 @@ App.Game.prototype = {
         }
         this.player.deactivateConstructMode();
 
+    },
+
+    cancelConstruction: function () {
+        if (null != this.choosenTowerType) {
+            this.choosenTowerType.destroy();
+            this.choosenTowerType = null;
+            this.player.deactivateConstructMode();
+        }
     },
 
     createNewWave: function() {
