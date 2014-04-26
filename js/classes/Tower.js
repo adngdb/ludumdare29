@@ -1,8 +1,9 @@
-App.Tower = function(game, x, y, enemyGroup) {
+App.Tower = function(game, x, y, type, enemyGroup) {
     Phaser.Sprite.call(this, game, x, y, 'tower');
 
     this.game = game;
     this.enemyGroup = enemyGroup;
+    this.type = type;
 
     this.anchor.setTo(0.5, 0.5);
 

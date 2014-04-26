@@ -1,12 +1,16 @@
-App.HUD = function(game) {
+App.HUD = function(game, player) {
 
     this.game = game;
+    this.player = player;
 };
 
 App.HUD.prototype = {
     create: function() {
         this.soundToggle = this.game.add.button(this.game.width - 50, 15, 'muteToggle', this.toggleSound, this);
         this.muteSound();
+
+        this.chooseTowerButton = this.game.add.button(this.game.width / 2, 15, 'buttonTower1', this.chooseTower, this);
+        this.chooseTowerButton.type = 'pouet';
     },
 
     update: function() {
@@ -35,5 +39,9 @@ App.HUD.prototype = {
         this.game.sound.mute   = true;
         this.soundMuted        = true;
         this.soundToggle.frame = 0;
+    },
+
+    chooseTower: function(element) {
+        this.player.setChoosenTowerType(element.type);
     }
 };

@@ -6,6 +6,7 @@ App.Player = function (game, x, y) {
     this.anchor.setTo(0.5, 0.5);
 
     this.isInConstructMode = false;
+    this.towerTypeToConstruct = null;
 
     // Enable physics on the player
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -49,4 +50,9 @@ App.Player.prototype.hurt = function (damages) {
     if (this.health <= 0) {
         console.log('noooooooooooooo!');
     }
+};
+
+App.Player.prototype.setChoosenTowerType = function (towerType) {
+    this.towerTypeToConstruct = towerType;
+    this.activateConstructMode();
 };

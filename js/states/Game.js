@@ -25,6 +25,7 @@ App.Game = function(game) {
     this.towerGroup;
     this.enemyGroup;
 
+    this.choosenTowerType = null;
     this.towerHeight = 32;
     this.towerWidth  = 32;
 
@@ -40,7 +41,7 @@ App.Game.prototype = {
     preload: function() {
         this.player = new App.Player(this.game, 100, 100);
         this.enemy  = new App.Enemy(this.game, 500, 500, this.player);
-        this.hud    = new App.HUD(this.game);
+        this.hud    = new App.HUD(this.game, this.player);
     },
 
     create: function() {
@@ -50,9 +51,6 @@ App.Game.prototype = {
         this.background.inputEnabled = true;
         this.background.events.onInputDown.add(this.clickListener, this);
 
-        var controlKey = this.game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
-        controlKey.onDown.add(this.player.activateConstructMode, this.player);
-        controlKey.onUp.add(this.player.deactivateConstructMode, this.player);
         var cKey = this.game.input.keyboard.addKey(Phaser.Keyboard.C);
         cKey.onDown.add(this.createNewWave, this);
 
@@ -108,7 +106,7 @@ App.Game.prototype = {
 
         // If there aren't any available, create a new one
         if (newTower === null) {
-            newTower = new App.Tower(this.game, this.input.x, this.input.y, this.enemyGroup);
+            newTower = new App.Tower(this.game, this.input.x, this.input.y, this.choosenTowerType, this.enemyGroup);
             this.towerGroup.add(newTower);
         }
         else {
@@ -119,6 +117,8 @@ App.Game.prototype = {
             newTower.x = this.input.x;
             newTower.y = this.input.y;
         }
+        this.player.deactivateConstructMode();
+
     },
 
     createNewWave: function() {
