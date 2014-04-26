@@ -11,9 +11,9 @@ App.Preloader.prototype = {
 
         this.load.setPreloadSprite(this.preloadBar);
 
-        this.load.image('player',     'assets/gfx/player.png');
+        this.load.image('player', 'assets/gfx/player.png');
         this.load.image('background', 'assets/gfx/background.png');
-        this.load.image('tower',      'assets/gfx/tower.png');
+        this.load.image('tower', 'assets/gfx/tower.png');
     },
 
     create: function() {
