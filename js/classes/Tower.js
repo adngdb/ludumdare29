@@ -1,8 +1,8 @@
 App.Tower = function(game, x, y) {
+    Phaser.Sprite.call(this, game, x, y, 'tower');
 
     this.game = game;
 
-    Phaser.Sprite.call(this, game, x, y, 'tower');
     this.anchor.setTo(0.5, 0.5);
 
     // Enable physics on the tower

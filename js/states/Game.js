@@ -23,9 +23,15 @@ App.Game = function(game) {
     this.player;
     this.hud;
     this.towerGroup;
+    this.enemyGroup;
 
     this.towerHeight = 32;
     this.towerWidth  = 32;
+
+    this.centerX = 1000 / 2;
+    this.centerY = 800 / 2;
+    this.RadiusX = this.centerX - 80;
+    this.RadiusY = this.centerY - 120;
 
 };
 
@@ -44,6 +50,12 @@ App.Game.prototype = {
         this.background.inputEnabled = true;
         this.background.events.onInputDown.add(this.clickListener, this);
 
+        var controlKey = this.game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
+        controlKey.onDown.add(this.player.activateConstructMode, this.player);
+        controlKey.onUp.add(this.player.deactivateConstructMode, this.player);
+        var cKey = this.game.input.keyboard.addKey(Phaser.Keyboard.C);
+        cKey.onDown.add(this.createNewWave, this);
+
         this.game.add.existing(this.player);
         this.game.add.existing(this.enemy);
         this.hud.create();
@@ -51,10 +63,15 @@ App.Game.prototype = {
         this.towerGroup = this.game.add.group();
         this.towerGroup.enableBody = true;
         this.towerGroup.physicsBodyType = Phaser.Physics.ARCADE;
+        
+        this.enemyGroup = this.game.add.group();
+        this.enemyGroup.enableBody = true;
+        this.enemyGroup.physicsBodyType = Phaser.Physics.ARCADE;
     },
 
     update: function() {
         this.game.physics.arcade.collide(this.player, this.towerGroup, this.player.collisionWithTower, null, this);
+        this.game.physics.arcade.collide(this.player, this.enemyGroup, this.player.collisionWithEnemy, null, this);
         this.game.physics.arcade.collide(this.player, this.enemy, this.player.collisionWithEnemy, null, this);
 
         this.hud.update();
@@ -99,14 +116,30 @@ App.Game.prototype = {
         newTower.y = this.input.y;
     },
 
+    createNewWave: function() {
+        for (var i=0; i<5; i++) {
+            var newEnemy = this.enemyGroup.getFirstDead();
+            var param = Math.random();
+            var newX = this.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);
+            var newY = this.centerY + (this.RadiusY + 50) * Math.sin(param * 2 * Math.PI);
+            if (newEnemy === null) {
+                newEnemy = new App.Enemy(this.game, newX, newY, this.player);
+                this.enemyGroup.add(newEnemy);
+            }
+            else {
+                newEnemy.x = newX;
+                newEnemy.y = newY;
+                newEnemy.revive();
+            }
+        }
+    },
+
     inArena: function () {
         // var inArena = true;
-        var relX = this.input.x - 1000 / 2;
-        var relY = this.input.y - 800 / 2;
-        var width = 1000 / 2 - 120;
-        var length = 800 / 2 - 80;
+        var relX = this.input.x - this.centerX;
+        var relY = this.input.y - this.centerY;
 
-        var det = (relX / width) * (relX / width) + (relY / length) * (relY / length);
+        var det = (relX / this.RadiusX) * (relX / this.RadiusX) + (relY / this.RadiusY) * (relY / this.RadiusY);
 
         if (det <= 1) {
             return true;

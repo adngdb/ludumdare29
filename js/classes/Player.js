@@ -11,10 +11,6 @@ App.Player = function(game, x, y) {
     // Enable physics on the player
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.immovable = true;
-
-    var key= this.game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
-    key.onDown.add(this.activateConstructMode, this);
-    key.onUp.add(this.deactivateConstructMode, this);
 };
 
 // Player is a type of Phaser.Sprite
