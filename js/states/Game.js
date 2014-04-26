@@ -108,16 +108,17 @@ App.Game.prototype = {
 
         // If there aren't any available, create a new one
         if (newTower === null) {
-            newTower = new App.Tower(this.game);
+            newTower = new App.Tower(this.game, this.input.x, this.input.y, this.enemyGroup);
             this.towerGroup.add(newTower);
         }
+        else {
+            // Revive it
+            newTower.revive();
 
-        // Revive it
-        newTower.revive();
-
-        // Move the tower to the given coordinates
-        newTower.x = this.input.x;
-        newTower.y = this.input.y;
+            // Move the tower to the given coordinates
+            newTower.x = this.input.x;
+            newTower.y = this.input.y;
+        }
     },
 
     createNewWave: function() {

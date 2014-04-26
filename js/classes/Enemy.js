@@ -14,6 +14,7 @@ App.Enemy = function(game, x, y, target) {
     this.anchor.setTo(0.5, 0.5);
 
     this.lastAttack = null;
+    this.health = 10;
 };
 
 // Enemies are a type of Phaser.Sprite
