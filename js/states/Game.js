@@ -23,6 +23,7 @@ App.Game = function(game) {
     this.player;
     // this.level;
     this.hud;
+
 };
 
 App.Game.prototype = {
@@ -42,6 +43,7 @@ App.Game.prototype = {
         this.player.create();
         this.enemy.create();
         this.hud.create();
+        this.game.physics.enable(this.player.sprite, Phaser.Physics.ARCADE);
     },
 
     update: function() {
@@ -63,9 +65,10 @@ App.Game.prototype = {
     },
 
     movePlayer: function () {
-        console.log("ICI");
-        this.game.add.tween(this.player).to( { x: '+300' }, 2000, Phaser.Easing.Linear.None, true);
-        // this.player.add.tween(sprite).to({ x: 600 }, 2000, Phaser.Easing.Linear.None);
+        // this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, 2000, Phaser.Easing.Linear.None, true);
+        this.player.targetX = this.input.x;
+        this.player.targetY = this.input.y;
+        this.game.physics.arcade.moveToXY(this.player.sprite, this.player.targetX, this.player.targetY, 200);
     }
 
 };
