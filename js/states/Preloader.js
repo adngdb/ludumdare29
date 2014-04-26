@@ -13,6 +13,8 @@ App.Preloader.prototype = {
 
         this.load.image('player', 'assets/gfx/player.png');
 
+        //background
+        this.load.image('background', 'assets/gfx/background.png');
     },
 
     create: function() {
