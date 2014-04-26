@@ -4,6 +4,10 @@ App.Tower = function(game, x, y) {
 
     Phaser.Sprite.call(this, game, x, y, 'tower');
     this.anchor.setTo(0.5, 0.5);
+
+    // Enable physics on the tower
+    this.game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.immovable  = true;
 };
 
 // Tower are a type of Phaser.Sprite

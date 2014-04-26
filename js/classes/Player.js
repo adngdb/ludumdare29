@@ -8,6 +8,10 @@ App.Player = function(game, x, y) {
 
     this.isInConstructMode = false;
 
+    // Enable physics on the player
+    this.game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.immovable = true;
+
     var key= this.game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
     key.onDown.add(this.activateConstructMode, this);
     key.onUp.add(this.deactivateConstructMode, this);
@@ -23,4 +27,12 @@ App.Player.prototype.activateConstructMode = function() {
 
 App.Player.prototype.deactivateConstructMode = function() {
     this.isInConstructMode = false;
+};
+
+App.Player.prototype.collisionWithEnemy = function() {
+    console.log('collisionWithEnemy');
+};
+
+App.Player.prototype.collisionWithTower = function() {
+    console.log('collisionWithTower');
 };

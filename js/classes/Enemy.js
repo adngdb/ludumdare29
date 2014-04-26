@@ -8,8 +8,6 @@ App.Enemy = function(game, x, y, target) {
     this.SPEED = 60;
 
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
-
-    this.enemy = this.game.add.sprite(500, 500, 'enemy');
 };
 
 // Enemies are a type of Phaser.Sprite

@@ -38,6 +38,8 @@ App.Game.prototype = {
     },
 
     create: function() {
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
         this.background = this.game.add.sprite(0, 0, 'background');
         this.background.inputEnabled = true;
         this.background.events.onInputDown.add(this.clickListener, this);
@@ -47,9 +49,14 @@ App.Game.prototype = {
         this.hud.create();
 
         this.towerGroup = this.game.add.group();
+        this.towerGroup.enableBody = true;
+        this.towerGroup.physicsBodyType = Phaser.Physics.ARCADE;
     },
 
     update: function() {
+        this.game.physics.arcade.collide(this.player, this.towerGroup, this.player.collisionWithTower, null, this);
+        this.game.physics.arcade.collide(this.player, this.enemy, this.player.collisionWithEnemy, null, this);
+
         this.hud.update();
     },
 
