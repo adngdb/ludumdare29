@@ -71,7 +71,7 @@ App.Game.prototype = {
             this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, 2000, Phaser.Easing.Linear.None, true);
 
             if (this.player.isInConstructMode) {
-                this.createTower();
+                this.time.events.add(Phaser.Timer.SECOND * 3, this.createTower, this);
             }
         }
     },
