@@ -5,6 +5,7 @@ window.onload = function() {
     game.state.add('Preloader', App.Preloader);
     game.state.add('MainMenu',  App.MainMenu);
     game.state.add('Game',      App.Game);
+    game.state.add('DeathMenu', App.DeathMenu);
 
     game.state.start('Boot');
 };

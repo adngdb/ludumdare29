@@ -77,10 +77,18 @@ App.Game.prototype = {
         this.music.loop = true;
         this.music.play();
 
+        this.waveTimer = null;
+        this.numberEnemy = 5;
+        this.waveCooldown = 5;
         this.lastWave = this.game.time.now;
     },
 
     update: function() {
+        if (this.player.health <= 0) {
+            console.log('noooooooooooooo DEAD!!!');
+            this.state.start('DeathMenu');
+        }
+
         this.game.physics.arcade.collide(this.player, this.towerGroup, this.player.collisionWithTower, null, this);
         this.game.physics.arcade.collide(this.player, this.enemyGroup, this.player.collisionWithEnemy, null, this);
         this.game.physics.arcade.collide(this.player, this.enemy, this.player.collisionWithEnemy, null, this);
@@ -98,12 +106,13 @@ App.Game.prototype = {
         }
         else {
             if (null != this.choosenTowerType) {
+                this.choosenTowerType.destroy();
                 this.choosenTowerType = null;
             }
         }
         if (!this.lastWave || this.game.time.elapsedSecondsSince(this.lastWave) > this.waveCooldown) {
             this.createNewWave();
-            this.waveCooldown = 5 + this.numberEnemy * 0.5;
+            this.waveCooldown += 5 * 0.5;
             this.lastWave = this.game.time.now;
         }
     },

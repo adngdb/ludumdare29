@@ -47,9 +47,9 @@ App.Player.prototype.collisionWithTower = function() {
 App.Player.prototype.hurt = function (damages) {
     this.health -= damages;
 
-    if (this.health <= 0) {
-        console.log('noooooooooooooo!');
-    }
+    // if (this.health <= 0) {
+    //     console.log('noooooooooooooo!');
+    // }
 };
 
 App.Player.prototype.setChoosenTowerType = function (towerType) {
