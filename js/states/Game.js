@@ -102,7 +102,13 @@ App.Game.prototype = {
         }
 
         this.game.physics.arcade.collide(this.player, this.enemyGroup);
-        this.game.physics.arcade.collide(this.player, this.towerGroup);
+        this.game.physics.arcade.collide(this.player, this.towerGroup,
+            function (player, towers) {
+                player.x -= player.body.deltaX();
+                player.y -= player.body.deltaY();
+                player.destination.setTo(player.x, player.y);
+            }
+        );
         this.game.physics.arcade.collide(this.enemyGroup, this.towerGroup);
         this.game.physics.arcade.collide(this.enemyGroup, this.enemyGroup);
 
