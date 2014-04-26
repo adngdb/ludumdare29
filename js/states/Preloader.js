@@ -19,6 +19,8 @@ App.Preloader.prototype = {
         this.load.audio('theme_fight', 'assets/sfx/theme_main_fight.ogg');
         this.load.audio('footstep', 'assets/sfx/player_footstep.ogg');
         this.load.audio('enemyAttack', 'assets/sfx/ennemy_attack_pig.ogg');
+        this.load.spritesheet('muteToggle', 'assets/interface/sound.png', 16, 16);
+        this.load.image('buttonTower1', 'assets/interface/ui-btn-tower-1.png');
 
     },
 
