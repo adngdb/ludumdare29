@@ -7,7 +7,7 @@ App.Preloader.prototype = {
 
     preload: function() {
         this.background = this.add.sprite(0, 0, 'preloaderBackground');
-        this.preloadBar = this.add.sprite(this.world.width - (this.world.width / 2) - 150, 50, 'preloaderBar');
+        this.preloadBar = this.add.sprite(this.world.centerX - 150, this.world.centerY - 60, 'preloaderBar');
 
         this.load.setPreloadSprite(this.preloadBar);
 
@@ -18,6 +18,12 @@ App.Preloader.prototype = {
     },
 
     create: function() {
+        var tween = this.add.tween(this.preloadBar)
+            .to({alpha: 0}, 500, Phaser.Easing.Linear.None, true);
+        tween.onComplete.add(this.startGame, this);
+    },
+
+    startGame: function() {
         this.game.state.start('MainMenu');
     }
 
