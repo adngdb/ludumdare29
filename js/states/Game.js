@@ -82,13 +82,14 @@ App.Game.prototype = {
             if (null == this.choosenTowerType) {
                 this.choosenTowerType = this.game.add.sprite(this.input.x, this.input.y, this.player.towerTypeToConstruct);
                 this.choosenTowerType.anchor.setTo(0.5, 0.5);
+                this.choosenTowerType.alpha = 0.5;
             }
             this.choosenTowerType.x = this.input.x;
             this.choosenTowerType.y = this.input.y;
         }
         else {
             if (null != this.choosenTowerType) {
-                this.choosenTowerType.destroy();
+                this.choosenTowerType = null;
             }
         }
     },
