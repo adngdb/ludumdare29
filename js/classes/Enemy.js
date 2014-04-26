@@ -5,7 +5,7 @@ App.Enemy = function(game, x, y, target) {
     this.target = target;
 
     this.anchor.setTo(0.5, 0.5);
-    this.SPEED = 0; //60;
+    this.SPEED = 60;
 
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
 
