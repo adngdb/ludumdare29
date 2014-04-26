@@ -8,9 +8,6 @@ App.Player = function(game, x, y) {
 
     this.isInConstructMode = false;
 
-    var key= this.game.input.keyboard.addKey(Phaser.Keyboard.CONTROL);
-    key.onDown.add(this.activateConstructMode, this);
-    key.onUp.add(this.deactivateConstructMode, this);
 };
 
 // Player is a type of Phaser.Sprite
