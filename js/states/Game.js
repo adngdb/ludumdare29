@@ -66,7 +66,8 @@ App.Game.prototype = {
     },
 
     clickListener: function () {
-        if (this.inArena(this.game.input.position)) {
+        if (this.inArena()) {
+            console.log("x, y = " + this.input.x)
             this.game.add.tween(this.player.sprite).to( { x: this.input.x, y: this.input.y }, 2000, Phaser.Easing.Linear.None, true);
 
             if (this.player.isInConstructMode) {
@@ -78,12 +79,13 @@ App.Game.prototype = {
     createTower: function () {
         console.log("create tower");
         console.log(this.towers.length);
-        var tower  = this.towers.create(position.x - this.towerHeight, position.y - this.towerWidth, 'tower');
+        var tower  = this.towers.create(this.input.x - this.towerHeight, this.input.y - this.towerWidth, 'tower');
         tower.name = 'tower' + this.towers.length;
     },
 
-    inArena: function (position) {
-        var inArena = false;
+    inArena: function () {
+        // var inArena = false;
+        var inArena = true;
 
         return inArena;
     }
