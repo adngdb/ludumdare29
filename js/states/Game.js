@@ -84,9 +84,21 @@ App.Game.prototype = {
     },
 
     inArena: function () {
-        // var inArena = false;
-        var inArena = true;
+        // var inArena = true;
+        var relX = this.input.x - 500;
+        var relY = this.input.y - 400;
+        var width = 400;
+        var length = 300;
 
-        return inArena;
+        var det = (relX / width) * (relX / width) + (relY / length) * (relY / length);
+
+        if (det <= 1) {
+            console.log("INSIDE");
+            return true;
+
+        } else {
+            console.log("OUTSIDE");
+            return false;
+        }
     }
 };
