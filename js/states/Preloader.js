@@ -18,15 +18,17 @@ App.Preloader.prototype = {
         this.load.spritesheet('player', 'assets/gfx/player.png', this.SPRITE_SIZE, this.SPRITE_SIZE);
         this.load.spritesheet('tower', 'assets/gfx/tower.png', this.TOWER_SIZE, this.TOWER_SIZE);
         this.load.spritesheet('enemy', 'assets/gfx/enemy.png', this.ENEMY_SIZE, this.ENEMY_SIZE);
-        // this.load.image('enemy', 'assets/gfx/enemy.png');
         this.load.image('background', 'assets/gfx/background.png');
         this.load.image('title_menu', 'assets/interface/menu_titre_place_holder.png');
 
         // audio for background soundtrack
         this.load.audio('theme_relax', 'assets/sfx/theme_main_relax.ogg');
         this.load.audio('theme_fight', 'assets/sfx/theme_main_fight.ogg');
+        this.load.audio('theme_defeat', 'assets/sfx/theme_defeat.ogg');
+        this.load.audio('theme_victory', 'assets/sfx/theme_victory.ogg');
         // audio for the player
         this.load.audio('footstep', 'assets/sfx/player_footstep.ogg');
+        this.load.audio('stick_attack', 'assets/sfx/player_attack_stick.ogg');
         // audio for "pig" enemy
         this.load.audio('enemy_pig_appears', 'assets/sfx/enemy_pig_appears.ogg');
         this.load.audio('enemy_pig_attack', 'assets/sfx/enemy_pig_attack.ogg');

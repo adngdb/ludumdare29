@@ -11,6 +11,10 @@ App.VictoryMenu.prototype = {
         this.add.text(this.world.centerX - 50, this.world.centerY - 70, text2, style);
 
         this.input.onDown.addOnce(this.startGame, this);
+
+        this.music = this.game.add.audio('theme_victory');
+        this.music.loop = true;
+        this.music.play();
     },
 
     init: function(score) {

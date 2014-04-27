@@ -8,7 +8,7 @@ App.Game = function(game) {
     this.input;     //the global input manager (you can access this.input.keyboard, this.input.mouse, as well from it)
     this.load;      //for preloading assets
     this.math;      //lots of useful common math operations
-    this.sound;     //the sound manager - add a sound, play one, set-up markers, etc
+    this.walkSound;     //the sound manager - add a sound, play one, set-up markers, etc
     this.stage;     //the game stage
     this.time;      //the clock
     this.tweens;    //the tween manager
@@ -19,7 +19,6 @@ App.Game = function(game) {
     //You can use any of these from any function within this State.
     //But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
 
-    this.enemy;
     this.player;
     this.hud;
     this.towerGroup;
@@ -40,8 +39,6 @@ App.Game = function(game) {
     this.lastWave;
     this.waveCooldown;
     this.creatingWave;
-
-    this.isTargetedByPlayer;
 
     this.score;
 };
@@ -82,7 +79,7 @@ App.Game.prototype = {
 
         this.music = this.game.add.audio('theme_relax');
         this.music.loop = true;
-        this.music.play();
+//        this.music.play();
 
         this.waveTimer = null;
         this.numberWave = 1;

@@ -5,7 +5,7 @@ App.Enemy = function(game, x, y, target) {
     this.target = target;
 
     this.SPEED = 60; // in pixels per second
-    this.REACH_DISTANCE = 40; // in pixels
+    this.REACH_DISTANCE = 100; // in pixels
     this.DAMAGES_TO_PLAYER = 10; // in health points
     this.DAMAGES_TO_TOWER = 5; // in health points
     this.ATTACK_COOLDOWN = 2; // in seconds

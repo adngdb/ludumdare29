@@ -24,9 +24,10 @@ App.Player = function (game, x, y) {
     this.body.immovable = true;
     this.destination = new Phaser.Point(x, y);
 
-    this.sound = this.game.add.audio('footstep');
-    this.sound.loop = true;
-    this.sound.play();
+    this.walkSound = this.game.add.audio('footstep');
+    this.walkSound.loop = true;
+    this.walkSound.play();
+    this.walkSound.pause();
 
     // Health of the player.
     // The game is lost if that number goes under zero.
@@ -41,6 +42,7 @@ App.Player.prototype.constructor = App.Player;
 App.Player.prototype.update = function () {
     if (this.game.physics.arcade.distanceBetween(this, this.destination) < this.MIN_DISTANCE_TO_MOVE) {
         this.body.velocity.setTo(0, 0);
+        this.walkSound.pause();
         this.animations.stop(null, true);
     }
 };
@@ -49,6 +51,7 @@ App.Player.prototype.moveToObject = function (dest) {
     this.destination.setTo(dest.x, dest.y);
     this.game.physics.arcade.moveToObject(this, this.destination, this.SPEED);
 
+    this.walkSound.resume();
     var dir = this.getCardinalDirection();
     this.animations.play('walk-' + dir, 12, true);
 };
