@@ -20,6 +20,8 @@ App.Preloader.prototype = {
         this.load.spritesheet('enemy', 'assets/gfx/enemy.png', this.ENEMY_SIZE, this.ENEMY_SIZE);
         this.load.image('background', 'assets/gfx/background.png');
         this.load.image('title_menu', 'assets/interface/menu_titre_place_holder.png');
+        this.load.image('game_over_menu', 'assets/interface/menu_game_over.png');
+        this.load.image('victory_menu', 'assets/interface/menu_victory01.png');
 
         // audio for background soundtrack
         this.load.audio('theme_relax', 'assets/sfx/theme_main_relax.ogg');

@@ -27,6 +27,7 @@ App.MainMenu.prototype = {
     },
 
     startGame: function () {
+        this.menuSound.stop();
         this.game.state.start('Game');
     }
 

@@ -91,6 +91,8 @@ App.Game.prototype = {
     update: function() {
         // check Player : End Of Game : player dead
         if (this.player.health <= 0) {
+            this.player.stopWalkSound();
+            this.music.stop();
             this.state.start('DeathMenu', true, false, this.score);
         }
         // check Enemy : dead ? newTarget ?
@@ -129,6 +131,7 @@ App.Game.prototype = {
                 // if all enemy are dead
                 if (this.numberWave > this.MAX_WAVE_NUMBER) {
                     this.player.stopWalkSound();
+                    this.music.stop();
                     // Max number of wave reached and ALL enemy killed => VICTORY !!!
                     this.state.start('VictoryMenu', true, false, this.score);
                 }
