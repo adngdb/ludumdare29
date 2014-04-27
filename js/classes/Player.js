@@ -1,9 +1,15 @@
 App.Player = function (game, x, y) {
-    Phaser.Sprite.call(this, game, x, y, 'player');
+    App.Movable.call(this, game, x, y, 'player');
 
     this.game = game;
 
     this.anchor.setTo(0.5, 0.5);
+
+    // Create player's animations.
+    this.animations.add('walk-w', this.range(0, 6));
+    this.animations.add('walk-n', this.range(6, 12));
+    this.animations.add('walk-s', this.range(12, 18));
+    this.animations.add('walk-e', this.range(18, 24));
 
     this.SPEED = 90; // in pixels per second
     this.MIN_DISTANCE_TO_MOVE = 10; // in pixels
@@ -11,8 +17,6 @@ App.Player = function (game, x, y) {
     this.isInConstructMode = false;
     this.towerTypeToConstruct = null;
 
-    // Enable physics on the player
-    this.game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.immovable = true;
     this.destination = new Phaser.Point(x, y);
 
@@ -27,16 +31,22 @@ App.Player = function (game, x, y) {
 };
 
 // Player is a type of Phaser.Sprite
-App.Player.prototype = Object.create(Phaser.Sprite.prototype);
+App.Player.prototype = Object.create(App.Movable.prototype);
 App.Player.prototype.constructor = App.Player;
 
 App.Player.prototype.update = function () {
-    if (this.game.physics.arcade.distanceBetween(this, this.destination) > this.MIN_DISTANCE_TO_MOVE) {
-        this.game.physics.arcade.moveToObject(this, this.destination, this.SPEED);
-    }
-    else {
+    if (this.game.physics.arcade.distanceBetween(this, this.destination) < this.MIN_DISTANCE_TO_MOVE) {
         this.body.velocity.setTo(0, 0);
+        this.animations.stop(null, true);
     }
+};
+
+App.Player.prototype.moveToObject = function (dest) {
+    this.destination.setTo(dest.x, dest.y);
+    this.game.physics.arcade.moveToObject(this, this.destination, this.SPEED);
+
+    var dir = this.getCardinalDirection();
+    this.animations.play('walk-' + dir, null, true);
 };
 
 App.Player.prototype.activateConstructMode = function () {
@@ -45,14 +55,6 @@ App.Player.prototype.activateConstructMode = function () {
 
 App.Player.prototype.deactivateConstructMode = function () {
     this.isInConstructMode = false;
-};
-
-App.Player.prototype.collisionWithEnemy = function() {
-    console.log('collisionWithEnemy');
-};
-
-App.Player.prototype.collisionWithTower = function() {
-    console.log('collisionWithTower');
 };
 
 App.Player.prototype.hurt = function (damages) {

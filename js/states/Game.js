@@ -159,7 +159,7 @@ App.Game.prototype = {
         }
 
         if (this.inArena() && !this.player.building) {
-            this.player.destination.setTo( this.input.x, this.input.y);
+            this.player.moveToObject(new Phaser.Point(this.input.x, this.input.y));
 
             if (this.player.isInConstructMode) {
                 // this.time.events.add(Phaser.Timer.SECOND * 3, this.constructTower, this);

@@ -1,5 +1,5 @@
 App.Enemy = function(game, x, y, target) {
-    Phaser.Sprite.call(this, game, x, y, 'enemy');
+    App.Movable.call(this, game, x, y, 'enemy');
 
     this.game = game;
     this.target = target;
@@ -10,7 +10,6 @@ App.Enemy = function(game, x, y, target) {
     this.DAMAGES_TO_TOWER = 5; // in health points
     this.ATTACK_COOLDOWN = 2; // in seconds
 
-    this.game.physics.enable(this, Phaser.Physics.ARCADE);
     this.anchor.setTo(0.5, 0.5);
 
     this.lastAttack = null;
@@ -20,7 +19,7 @@ App.Enemy = function(game, x, y, target) {
 };
 
 // Enemies are a type of Phaser.Sprite
-App.Enemy.prototype = Object.create(Phaser.Sprite.prototype);
+App.Enemy.prototype = Object.create(App.Movable.prototype);
 App.Enemy.prototype.constructor = App.Enemy;
 
 App.Enemy.prototype.update = function() {
