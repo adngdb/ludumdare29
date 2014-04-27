@@ -18,6 +18,7 @@ App.Preloader.prototype = {
         this.load.spritesheet('tower', 'assets/gfx/tower.png', this.TOWER_SIZE, this.TOWER_SIZE);
         this.load.image('enemy', 'assets/gfx/enemy.png');
         this.load.image('background', 'assets/gfx/background.png');
+        this.load.image('title_menu', 'assets/interface/menu_titre_place_holder.png');
 
         // audio for background soundtrack
         this.load.audio('theme_relax', 'assets/sfx/theme_main_relax.ogg');
