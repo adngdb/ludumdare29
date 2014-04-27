@@ -22,7 +22,7 @@ App.Player = function (game, x, y) {
 
     this.sound = this.game.add.audio('footstep');
     this.sound.loop = true;
-    // this.sound.play();
+    this.sound.play();
 
     // Health of the player.
     // The game is lost if that number goes under zero.

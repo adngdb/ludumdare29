@@ -100,6 +100,7 @@ App.Game.prototype = {
             var currEnemy = this.enemyGroup.getAt(i);
             if (currEnemy.exists && (currEnemy.health <= 0) ){
                 this.score++;
+                currEnemy.soundDies.play();
                 currEnemy.kill();
             }
         }
@@ -113,6 +114,7 @@ App.Game.prototype = {
                 if (tower.alpha == 0) {
                     tower.build = false;
                     tower.alpha = 1;
+                    tower.init();
                     this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION,
                         function() {
                             this.player.building = false;
@@ -243,6 +245,7 @@ App.Game.prototype = {
             newEnemy.revive();
         }
         this.creatingWave = false;
+        newEnemy.init();
     },
 
     inArena: function () {
