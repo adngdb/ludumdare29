@@ -103,11 +103,20 @@ App.Game.prototype = {
 
         this.game.physics.arcade.collide(this.player, this.enemyGroup);
         this.game.physics.arcade.collide(this.player, this.towerGroup,
-            function (player, towers) {
+            function (player, tower) {
                 player.x -= player.body.deltaX();
                 player.y -= player.body.deltaY();
                 player.destination.setTo(player.x, player.y);
-            }
+                if (tower.alpha == 0) {
+                    tower.animation = true;
+                    tower.alpha = 1;
+                    this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION,
+                        function() {
+                            this.player.building = false;
+                        }, this
+                    );
+                }
+            }, null, this
         );
         this.game.physics.arcade.collide(this.enemyGroup, this.towerGroup);
         this.game.physics.arcade.collide(this.enemyGroup, this.enemyGroup);
@@ -149,12 +158,13 @@ App.Game.prototype = {
             this.cancelConstruction();
         }
 
-        if (this.inArena()) {
+        if (this.inArena() && !this.player.building) {
             this.player.destination.setTo( this.input.x, this.input.y);
 
             if (this.player.isInConstructMode) {
-                //this.time.events.add(Phaser.Timer.SECOND * 3, this.constructTower, this);
+                // this.time.events.add(Phaser.Timer.SECOND * 3, this.constructTower, this);
                 this.constructTower();
+                this.player.building = true;
             }
         }
     },
@@ -177,7 +187,7 @@ App.Game.prototype = {
             newTower.y = this.input.y;
         }
         this.player.deactivateConstructMode();
-
+        newTower.alpha = 0;
     },
 
     cancelConstruction: function () {

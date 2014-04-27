@@ -10,6 +10,7 @@ App.Tower = function(game, x, y, type, enemyGroup) {
     this.REACH_DISTANCE = 40; // in pixels
     this.DAMAGES_TO_ENEMY = 10; // in health points
     this.ATTACK_COOLDOWN = 0.3; // in seconds
+    this.CONSTRUCTION_DURATION = 1; // in seconds
 
     // Enable physics on the tower
     this.game.physics.enable(this, Phaser.Physics.ARCADE);

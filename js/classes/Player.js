@@ -23,6 +23,7 @@ App.Player = function (game, x, y) {
     // Health of the player.
     // The game is lost if that number goes under zero.
     this.health = 100;
+    this.building = false;
 };
 
 // Player is a type of Phaser.Sprite
