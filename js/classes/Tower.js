@@ -17,6 +17,7 @@ App.Tower = function(game, x, y, type, enemyGroup) {
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
     // this.body.immovable = true;
     this.body.moves = false;
+    this.build = false;
 
     this.lastAttack = null;
 };
@@ -26,6 +27,11 @@ App.Tower.prototype = Object.create(Phaser.Sprite.prototype);
 App.Tower.prototype.constructor = App.Tower;
 
 App.Tower.prototype.update = function() {
+    // do nothing, if not build yet
+    if (this.alpha == 0 || !this.build) {
+        return;
+    }
+
     // Attack the first enemy in range if the cooldown time has passed.
     if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
         var target = this.enemyGroup.getAt(0);

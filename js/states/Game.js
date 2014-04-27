@@ -34,10 +34,12 @@ App.Game = function(game) {
     this.RadiusX = this.centerX - 80;
     this.RadiusY = this.centerY - 120;
 
+    this.numberWave;
+    this.MAX_WAVE_NUMBER = 3;
     this.waveTimer;
-    this.numberEnemy;
     this.lastWave;
     this.waveCooldown;
+    this.creatingWave;
 
     this.score;
 };
@@ -81,9 +83,10 @@ App.Game.prototype = {
         this.music.play();
 
         this.waveTimer = null;
-        this.numberEnemy = 5;
+        this.numberWave = 1;
         this.waveCooldown = 5;
         this.lastWave = this.game.time.now;
+        this.creatingWave = false;
 
         this.score = 0;
     },
@@ -108,11 +111,12 @@ App.Game.prototype = {
                 player.y -= player.body.deltaY();
                 player.destination.setTo(player.x, player.y);
                 if (tower.alpha == 0) {
-                    tower.animation = true;
+                    tower.build = false;
                     tower.alpha = 1;
                     this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION,
                         function() {
                             this.player.building = false;
+                            tower.build = true;
                         }, this
                     );
                 }
@@ -138,10 +142,27 @@ App.Game.prototype = {
                 this.choosenTowerType = null;
             }
         }
-        if (!this.lastWave || this.game.time.elapsedSecondsSince(this.lastWave) > this.waveCooldown) {
-            this.createNewWave();
-            this.waveCooldown += 5 * 0.5;
-            this.lastWave = this.game.time.now;
+        if (this.numberWave <= this.MAX_WAVE_NUMBER) {
+            if (!this.lastWave || this.game.time.elapsedSecondsSince(this.lastWave) > this.waveCooldown) {
+                this.createNewWave();
+                this.waveCooldown += 5 * 0.5;
+                this.lastWave = this.game.time.now;
+            }
+        }
+        else if (!this.creatingWave) {
+            var index = this.enemyGroup.length-1;
+            var enemy = this.enemyGroup.getAt(index);
+            var win = true;
+            while (win && index >= 0) {
+                win = !enemy.exists;
+                index--;
+                enemy = this.enemyGroup.getAt(index);
+            }
+            if (win) {
+                // Max number of wave reached and ALL enemy killed => VICTORY !!!
+                this.state.start('VictoryMenu', true, false, this.score);
+            }
+
         }
     },
 
@@ -201,9 +222,10 @@ App.Game.prototype = {
     createNewWave: function() {
         if (this.waveTimer !== null) this.waveTimer.destroy();
         this.waveTimer = this.game.time.create();
-        this.waveTimer.repeat(500, this.numberEnemy, this.createEnemy, this);
+        this.waveTimer.repeat(500, this.numberWave * 5, this.createEnemy, this);
         this.waveTimer.start();
-        this.numberEnemy += 5;
+        this.creatingWave = true;
+        this.numberWave++;
     },
 
     createEnemy: function() {
@@ -220,6 +242,7 @@ App.Game.prototype = {
             newEnemy.y = newY;
             newEnemy.revive();
         }
+        this.creatingWave = false;
     },
 
     inArena: function () {
