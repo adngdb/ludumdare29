@@ -81,7 +81,7 @@ App.Player.prototype.deactivateConstructMode = function () {
 };
 
 App.Player.prototype.hurt = function (damages) {
-    // this.health -= damages;
+    this.health -= damages;
 };
 
 App.Player.prototype.tryHit = function (target) {
