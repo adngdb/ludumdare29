@@ -9,6 +9,7 @@ App.Enemy = function(game, x, y, target) {
     this.DAMAGES_TO_PLAYER = 10; // in health points
     this.DAMAGES_TO_TOWER = 5; // in health points
     this.ATTACK_COOLDOWN = 2; // in seconds
+    this.MAX_HEALTH = 100;
 
     // walk animation
     this.animations.add('walk-w', this.range(0, 6));
@@ -24,7 +25,7 @@ App.Enemy = function(game, x, y, target) {
     this.anchor.setTo(0.5, 0.5);
 
     this.lastAttack = null;
-    this.health = 10;
+    this.health = this.MAX_HEALTH;
     this.isTargeted = false;
 
     this.soundAppears = this.game.add.audio('enemy_pig_appears');
@@ -43,7 +44,7 @@ App.Enemy.prototype.constructor = App.Enemy;
 App.Enemy.prototype.init = function() {
     this.soundAppears.play();
     this.lastAttack = null;
-    this.health = 10;
+    this.health = this.MAX_HEALTH;
 };
 
 App.Enemy.prototype.update = function() {

@@ -29,6 +29,8 @@ App.Player = function (game, x, y) {
     this.walkSound.play();
     this.walkSound.pause();
 
+    this.stickAttackSound = this.game.add.audio('stick_attack');
+
     // Health of the player.
     // The game is lost if that number goes under zero.
     this.health = 100;
@@ -70,6 +72,7 @@ App.Player.prototype.hurt = function (damages) {
 
 App.Player.prototype.tryHit = function (target) {
     if (this.game.physics.arcade.distanceBetween(this, target) < this.ATTACK_RANGE) {
+        this.stickAttackSound.restart();
         target.hurt(this.DAMAGE_TO_ENEMY);
     }
 };
