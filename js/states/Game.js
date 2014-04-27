@@ -145,7 +145,7 @@ App.Game.prototype = {
 
                         this.firstLoop = false;
                     }
-                    if (this.musicRelax.volume <= 1) {
+                    if (this.musicRelax.volume <= 0.75) {
                         this.musicRelax.volume += 0.01;
                     }
                 }
@@ -178,7 +178,7 @@ App.Game.prototype = {
                         this.musicFight.play();
                         this.firstLoop = false;
                     }
-                    if (this.musicFight.volume <= 1) {
+                    if (this.musicFight.volume <= 0.75) {
                         this.musicFight.volume += 0.01;
                     }
                 }
