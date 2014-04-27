@@ -34,7 +34,7 @@ App.Game = function(game) {
     this.RadiusY = this.centerY - 120;
 
     this.numberWave;
-    this.MAX_WAVE_NUMBER = 3;
+    this.MAX_WAVE_NUMBER = 1;
     this.waveTimer;
     this.lastWave;
     this.waveCooldown;
@@ -80,12 +80,13 @@ App.Game.prototype = {
         this.musicFight.volume = 0;
         this.musicRelax = this.game.add.audio('theme_relax');
         this.musicRelax.loop = true;
-        this.musicRelax.play();
+        this.musicRelax.volume = 0;
+        // this.musicRelax.play();
         this.firstLoop = false;
 
         this.waveTimer = null;
         this.numberWave = 1;
-        this.waveCooldown = 15;
+        this.waveCooldown = 5;
         this.lastWave = this.game.time.now;
         this.creatingWave = false;
 
@@ -96,10 +97,9 @@ App.Game.prototype = {
         // check Player : End Of Game : player dead
         if (this.player.health <= 0) {
             this.player.stopWalkSound();
-            this.music.stop();
-            this.state.start('DeathMenu', true, false, this.score);
             this.musicFight.stop();
             this.musicRelax.stop();
+            this.state.start('DeathMenu', true, false, this.score);
         }
         // check Enemy : dead ? newTarget ?
         for (var i = this.enemyGroup.length-1; i>=0; i--)
@@ -143,6 +143,7 @@ App.Game.prototype = {
                     if (this.firstLoop) {
                         this.musicFight.stop();
                         this.musicRelax.play();
+
                         this.firstLoop = false;
                     }
                     if (this.musicRelax.volume <= 1) {
@@ -152,11 +153,10 @@ App.Game.prototype = {
 
                 if (this.numberWave > this.MAX_WAVE_NUMBER) {
                     this.player.stopWalkSound();
-                    this.music.stop();
                     // Max number of wave reached and ALL enemy killed => VICTORY !!!
-                    this.state.start('VictoryMenu', true, false, this.score);
                     this.musicFight.stop();
                     this.musicRelax.stop();
+                    this.state.start('VictoryMenu', true, false, this.score);
                 }
                 else {
                     // create next wave

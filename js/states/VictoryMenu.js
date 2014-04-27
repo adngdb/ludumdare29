@@ -19,10 +19,6 @@ App.VictoryMenu.prototype = {
 
         this.victorySound = this.game.add.audio('theme_victory');
         this.victorySound.play();
-
-        this.mainSound = this.game.add.audio('theme_fight');
-        this.mainSound.loop = true;
-        this.time.events.add(this.victorySound.duration, function () { this.mainSound.play(); }, this);
     },
 
     init: function(score) {
@@ -36,7 +32,7 @@ App.VictoryMenu.prototype = {
     },
 
     startGame: function(pointer) {
-        this.mainSound.stop();
+        this.victorySound.stop();
         this.game.state.start('Game');
     }
 
