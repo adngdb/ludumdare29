@@ -5,11 +5,21 @@ App.Player = function (game, x, y) {
 
     this.anchor.setTo(0.5, 0.5);
 
-    // Create player's animations.
+    // Create player's animations : walk
     this.animations.add('walk-w', this.range(0, 6));
-    this.animations.add('walk-n', this.range(6, 12));
-    this.animations.add('walk-s', this.range(12, 18));
-    this.animations.add('walk-e', this.range(18, 24));
+    this.animations.add('walk-n', this.range(18, 24));
+    this.animations.add('walk-s', this.range(36, 42));
+    this.animations.add('walk-e', this.range(54, 60));
+    // Animation for attack mode
+    this.animations.add('attack-w', [6, 7, 8, 9, 10, 11, 6]);
+    this.animations.add('attack-n', [24, 25, 26, 27, 28, 29, 24]);
+    this.animations.add('attack-s', [42, 43, 44, 45, 46, 47, 42]);
+    this.animations.add('attack-e', [60, 61, 62, 63, 64, 65, 60]);
+    // Animation for building mode
+    this.animations.add('build-w', this.range(12, 18)); //[12, 13, 14, 15, 16, 17, 12]);
+    this.animations.add('build-n', this.range(30, 36)); //[30, 31, 32, 33, 34, 35, 30]);
+    this.animations.add('build-s', this.range(48, 54)); //[48, 49, 50, 51, 52, 53, 48]);
+    this.animations.add('build-e', this.range(66, 72)); //[66, 67, 68, 69, 70, 71, 66]);
 
     // strength of player vs enemy
     this.DAMAGE_TO_ENEMY = 10;
@@ -44,10 +54,13 @@ App.Player.prototype = Object.create(App.Movable.prototype);
 App.Player.prototype.constructor = App.Player;
 
 App.Player.prototype.update = function () {
-    if (this.game.physics.arcade.distanceBetween(this, this.destination) < this.MIN_DISTANCE_TO_MOVE) {
+    if ( (this.body.velocity.x != 0 || this.body.velocity.y != 0)
+      && this.game.physics.arcade.distanceBetween(this, this.destination) < this.MIN_DISTANCE_TO_MOVE) {
         this.body.velocity.setTo(0, 0);
         this.walkSound.pause();
-        this.animations.stop(null, true);
+        if (!this.building) {
+            this.animations.stop(null, true);
+        }
     }
 };
 
@@ -58,6 +71,18 @@ App.Player.prototype.moveToObject = function (dest) {
     this.walkSound.resume();
     var dir = this.getCardinalDirection();
     this.animations.play('walk-' + dir, 12, true);
+};
+
+App.Player.prototype.setBuildMode = function(target) {
+    var dir = this.getCardinalDirection(this, target);
+    this.animations.play('build-' + dir, 12, true);
+    this.building = true;
+};
+
+App.Player.prototype.endBuildMode = function(target) {
+    this.animations.stop(null, true);
+    this.building = false;
+    target.build = true;
 };
 
 App.Player.prototype.activateConstructMode = function () {
@@ -76,8 +101,14 @@ App.Player.prototype.tryHit = function (target) {
 
     if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
         if (this.game.physics.arcade.distanceBetween(this, target) < this.ATTACK_RANGE) {
-            target.hurt(this.DAMAGE_TO_ENEMY);
+            var dir = this.getCardinalDirection(this, target);
+            this.animations.play('attack-' + dir, 12);
+            this.game.time.events.add(Phaser.Timer.SECOND * 0.25,
+                function() {target.hurt(this.DAMAGE_TO_ENEMY);}
+                , this
+            );
             this.lastAttack = this.game.time.now;
+            this.body.velocity.setTo(0, 0);
         }
     }
 };
