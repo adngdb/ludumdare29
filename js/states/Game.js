@@ -75,13 +75,17 @@ App.Game.prototype = {
         this.enemyGroup.enableBody = true;
         this.enemyGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
-        this.music = this.game.add.audio('theme_relax');
-        this.music.loop = true;
-        this.music.play();
+        this.musicFight = this.game.add.audio('theme_fight');
+        this.musicFight.loop = true;
+        this.musicFight.volume = 0;
+        this.musicRelax = this.game.add.audio('theme_relax');
+        this.musicRelax.loop = true;
+        this.musicRelax.play();
+        this.firstLoop = false;
 
         this.waveTimer = null;
         this.numberWave = 1;
-        this.waveCooldown = 5;
+        this.waveCooldown = 15;
         this.lastWave = this.game.time.now;
         this.creatingWave = false;
 
@@ -94,6 +98,8 @@ App.Game.prototype = {
             this.player.stopWalkSound();
             this.music.stop();
             this.state.start('DeathMenu', true, false, this.score);
+            this.musicFight.stop();
+            this.musicRelax.stop();
         }
         // check Enemy : dead ? newTarget ?
         for (var i = this.enemyGroup.length-1; i>=0; i--)
@@ -129,11 +135,28 @@ App.Game.prototype = {
             }
             if (win) {
                 // if all enemy are dead
+                if (this.musicFight.volume >= 0) {
+                    this.musicFight.volume -= 0.01;
+                    this.firstLoop = true;
+                }
+                else {
+                    if (this.firstLoop) {
+                        this.musicFight.stop();
+                        this.musicRelax.play();
+                        this.firstLoop = false;
+                    }
+                    if (this.musicRelax.volume <= 1) {
+                        this.musicRelax.volume += 0.01;
+                    }
+                }
+
                 if (this.numberWave > this.MAX_WAVE_NUMBER) {
                     this.player.stopWalkSound();
                     this.music.stop();
                     // Max number of wave reached and ALL enemy killed => VICTORY !!!
                     this.state.start('VictoryMenu', true, false, this.score);
+                    this.musicFight.stop();
+                    this.musicRelax.stop();
                 }
                 else {
                     // create next wave
@@ -146,6 +169,20 @@ App.Game.prototype = {
             else {
                 // some enemy are alive : reset cooldown for next wave
                 this.lastWave = this.game.time.now;
+                if (this.musicRelax.volume >= 0) {
+                    this.musicRelax.volume -= 0.01;
+                    this.firstLoop = true;
+                }
+                else {
+                    if (this.firstLoop) {
+                        this.musicRelax.stop();
+                        this.musicFight.play();
+                        this.firstLoop = false;
+                    }
+                    if (this.musicFight.volume <= 1) {
+                        this.musicFight.volume += 0.01;
+                    }
+                }
             }
         }
 
