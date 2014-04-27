@@ -104,9 +104,10 @@ App.Player.prototype.tryHit = function (target) {
             var dir = this.getCardinalDirection(this, target);
             this.animations.play('attack-' + dir, 12);
             this.game.time.events.add(Phaser.Timer.SECOND * 0.25,
-                function() {target.hurt(this.DAMAGE_TO_ENEMY);}
+                function() {target.hurt(this.DAMAGE_TO_ENEMY); }
                 , this
             );
+            this.stickAttackSound.play();
             this.lastAttack = this.game.time.now;
             this.body.velocity.setTo(0, 0);
         }

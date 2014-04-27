@@ -9,7 +9,7 @@ App.Enemy = function(game, x, y, target) {
     this.DAMAGES_TO_PLAYER = 10; // in health points
     this.DAMAGES_TO_TOWER = 5; // in health points
     this.ATTACK_COOLDOWN = 2; // in seconds
-    this.MAX_HEALTH = 10;
+    this.MAX_HEALTH = 20;
 
     // walk animation
     this.animations.add('walk-w', this.range(0, 6));

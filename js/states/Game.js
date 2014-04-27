@@ -34,7 +34,7 @@ App.Game = function(game) {
     this.RadiusY = this.centerY - 120;
 
     this.numberWave;
-    this.MAX_WAVE_NUMBER = 1;
+    this.MAX_WAVE_NUMBER = 3;
     this.waveTimer;
     this.lastWave;
     this.waveCooldown;
@@ -81,7 +81,6 @@ App.Game.prototype = {
         this.musicRelax = this.game.add.audio('theme_relax');
         this.musicRelax.loop = true;
         this.musicRelax.volume = 0;
-        // this.musicRelax.play();
         this.firstLoop = false;
 
         this.waveTimer = null;
@@ -199,12 +198,6 @@ App.Game.prototype = {
                     tower.init();
                     player.setBuildMode(tower);
                     this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION, player.endBuildMode, player, tower);
-                    //     function() {
-                    //         this.player.building = false;
-                    //         tower.build = true;
-                    //         this.player.animations.stop(null, true);
-                    //     }, this
-                    // );
                 }
             }, null, this
         );

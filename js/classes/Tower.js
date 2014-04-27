@@ -9,9 +9,13 @@ App.Tower = function(game, x, y, type, enemyGroup) {
 
     this.REACH_DISTANCE = 80; // in pixels
     this.DAMAGES_TO_ENEMY = 10; // in health points
-    this.ATTACK_COOLDOWN = 0.3; // in seconds
-    this.CONSTRUCTION_DURATION = 1; // in seconds
-    this.animations.add('attack', [0, 1, 2, 3, 0]);
+    this.ATTACK_COOLDOWN = 1; // in seconds
+    this.CONSTRUCTION_DURATION = 2; // in seconds
+
+    // set animations for creation, attack and death
+    this.animations.add('tower_creation', [5, 6, 7, 8, 9, 10]);
+    this.animations.add('tower_attack', [0, 1, 2, 3, 4]);
+    this.animations.add('tower_death', [11, 12, 13, 14, 15, 16]);
 
     // Enable physics on the tower
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -32,6 +36,7 @@ App.Tower.prototype.constructor = App.Tower;
 
 App.Tower.prototype.init = function() {
     this.soundAppears.play();
+    this.animations.play('tower_creation', 6 / this.CONSTRUCTION_DURATION);
 };
 
 App.Tower.prototype.update = function() {
@@ -60,7 +65,7 @@ App.Tower.prototype.update = function() {
                 , this
             );
             this.lastAttack = this.game.time.now;
-            this.animations.play('attack', 12);
+            this.animations.play('tower_attack', 12);
             this.soundAttack.play();
         }
     }
