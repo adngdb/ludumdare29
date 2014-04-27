@@ -69,7 +69,7 @@ App.Movable.prototype.getCardinalDirection = function (source, dest) {
 App.Movable.prototype.moveToObject = function (dest) {
     this.game.physics.arcade.moveToObject(this, dest, this.SPEED);
 
-    this.game.debug.geom(new Phaser.Line(this.body.x, this.body.y, dest.x, dest.y));
+    // this.game.debug.geom(new Phaser.Line(this.body.x, this.body.y, dest.x, dest.y));
 
     var dir = this.getCardinalDirection();
     this.animations.play('walk-' + dir, 12, true);

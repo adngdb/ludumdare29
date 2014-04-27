@@ -298,6 +298,10 @@ App.Game.prototype = {
         for (var i = surroundingTiles.length - 1; i >= 0; i--) {
             if (surroundingTiles[i]) {
                 surroundingTiles[i].index = 1;
+                surroundingTiles[i].collideDown = true;
+                surroundingTiles[i].collideLeft = true;
+                surroundingTiles[i].collideRight = true;
+                surroundingTiles[i].collideUp = true;
             }
         }
         this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
@@ -367,6 +371,12 @@ App.Game.prototype = {
             var optimizedPath = [path[0]];
             var foundACollision;
 
+            // for (i = 0; i < ln - 1; i++) {
+            //     self.game.debug.geom(new Phaser.Line(path[i].x * 16, path[i].y * 16, path[i + 1].x * 16, path[i + 1].y * 16));
+            // }
+
+            // i = 0;
+
             while (i < ln - 2) {
                 foundACollision = false;
 
@@ -375,7 +385,7 @@ App.Game.prototype = {
                     var nextNextStep = path[j];
 
                     var line = new Phaser.Line(currentStep.x * 16, currentStep.y * 16, nextNextStep.x * 16, nextNextStep.y * 16);
-                    if (self.access_layer.getRayCastTiles(line, 8, true).length > 0) {
+                    if (self.access_layer.getRayCastTiles(line, 16, true).length > 0) {
                         i = j - 1;
                         optimizedPath.push(path[i]);
                         foundACollision = true;
@@ -389,6 +399,12 @@ App.Game.prototype = {
             }
 
             optimizedPath.push(path[ln - 1]);
+
+            // for (i = 0; i < optimizedPath.length - 1; i++) {
+            //     self.game.debug.geom(new Phaser.Line(optimizedPath[i].x * 16, optimizedPath[i].y * 16,
+            //         optimizedPath[i + 1].x * 16, optimizedPath[i + 1].y * 16));
+            // }
+
             optimizedPath.shift();
 
             // Convert tiles coordinates to real world coordinates.
