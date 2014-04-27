@@ -47,7 +47,6 @@ App.Game.prototype = {
 
     preload: function() {
         this.player = new App.Player(this.game, this.game.world.width / 2, this.game.world.height / 2);
-        // this.enemy  = new App.Enemy(this.game, 500, 500, this.player);
         this.hud    = new App.HUD(this.game, this.player);
     },
 
@@ -66,7 +65,6 @@ App.Game.prototype = {
         cancelConstruction.onDown.add(this.cancelConstruction, this);
 
         this.game.add.existing(this.player);
-        // this.game.add.existing(this.enemy);
         this.hud.create();
 
         this.towerGroup = this.game.add.group();
@@ -79,7 +77,7 @@ App.Game.prototype = {
 
         this.music = this.game.add.audio('theme_relax');
         this.music.loop = true;
-//        this.music.play();
+        this.music.play();
 
         this.waveTimer = null;
         this.numberWave = 1;
