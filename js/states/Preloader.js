@@ -3,6 +3,7 @@ App.Preloader = function(game) {
     this.preloadBar = null;
 
     this.SPRITE_SIZE = 48;
+    this.TOWER_SIZE = 64;
 };
 
 App.Preloader.prototype = {
@@ -15,7 +16,7 @@ App.Preloader.prototype = {
 
         this.load.spritesheet('player', 'assets/gfx/player.png', this.SPRITE_SIZE, this.SPRITE_SIZE);
         this.load.image('background', 'assets/gfx/background.png');
-        this.load.image('tower', 'assets/gfx/tower.png');
+        this.load.spritesheet('tower', 'assets/gfx/tower.png', this.TOWER_SIZE, this.TOWER_SIZE);
         this.load.image('enemy', 'assets/gfx/enemy.png');
 
         this.load.audio('theme_relax', 'assets/sfx/theme_main_relax.ogg');

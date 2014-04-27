@@ -46,7 +46,7 @@ App.Player.prototype.moveToObject = function (dest) {
     this.game.physics.arcade.moveToObject(this, this.destination, this.SPEED);
 
     var dir = this.getCardinalDirection();
-    this.animations.play('walk-' + dir, null, true);
+    this.animations.play('walk-' + dir, 12, true);
 };
 
 App.Player.prototype.activateConstructMode = function () {

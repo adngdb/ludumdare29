@@ -7,10 +7,11 @@ App.Tower = function(game, x, y, type, enemyGroup) {
 
     this.anchor.setTo(0.5, 0.5);
 
-    this.REACH_DISTANCE = 40; // in pixels
+    this.REACH_DISTANCE = 80; // in pixels
     this.DAMAGES_TO_ENEMY = 10; // in health points
     this.ATTACK_COOLDOWN = 0.3; // in seconds
     this.CONSTRUCTION_DURATION = 1; // in seconds
+    this.animations.add('attack', [0, 1, 2, 3, 0]);
 
     // Enable physics on the tower
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -42,6 +43,7 @@ App.Tower.prototype.update = function() {
         if (target != -1) {
             target.hurt(this.DAMAGES_TO_ENEMY);
             this.lastAttack = this.game.time.now;
+            this.animations.play('attack', 12);
         }
     }
 }
