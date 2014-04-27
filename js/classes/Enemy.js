@@ -29,8 +29,11 @@ App.Enemy = function(game, x, y, target) {
     this.isTargeted = false;
 
     this.soundAppears = this.game.add.audio('enemy_pig_appears');
+    this.soundAppears.volume = 0.5;
     this.soundAttack = this.game.add.audio('enemy_pig_attack');
+    this.soundAttack.volume = 0.3;
     this.soundDies = this.game.add.audio('enemy_pig_dies');
+    this.soundDies.volume = 0.5;
 
     this.inputEnabled = true;
     this.events.onInputDown.add(this.clickListener, this);

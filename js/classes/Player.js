@@ -37,11 +37,13 @@ App.Player = function (game, x, y) {
     this.destination = new Phaser.Point(x, y);
 
     this.walkSound = this.game.add.audio('footstep');
+    this.walkSound.volume = 0.50;
     this.walkSound.loop = true;
     this.walkSound.play();
     this.walkSound.pause();
 
     this.stickAttackSound = this.game.add.audio('stick_attack');
+    this.stickAttackSound.volume = 1;
 
     // Health of the player.
     // The game is lost if that number goes under zero.
@@ -94,7 +96,7 @@ App.Player.prototype.deactivateConstructMode = function () {
 };
 
 App.Player.prototype.hurt = function (damages) {
-    this.health -= damages;
+    // this.health -= damages;
 };
 
 App.Player.prototype.tryHit = function (target) {

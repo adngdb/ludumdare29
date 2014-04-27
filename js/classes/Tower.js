@@ -10,7 +10,7 @@ App.Tower = function(game, x, y, type, enemyGroup) {
     this.REACH_DISTANCE = 80; // in pixels
     this.DAMAGES_TO_ENEMY = 10; // in health points
     this.ATTACK_COOLDOWN = 1; // in seconds
-    this.CONSTRUCTION_DURATION = 2; // in seconds
+    this.CONSTRUCTION_DURATION = 1; // in seconds
 
     // set animations for creation, attack and death
     this.animations.add('tower_creation', [5, 6, 7, 8, 9, 10]);
@@ -27,6 +27,7 @@ App.Tower = function(game, x, y, type, enemyGroup) {
 
     this.soundAppears = this.game.add.audio('tower1_appears');
     this.soundAttack = this.game.add.audio('tower1_bites');
+    this.soundAttack.volume = 0.7;
     // this.soundDies = this.game.add.audio(''); // does not exist yet !!!
 };
 
@@ -65,7 +66,7 @@ App.Tower.prototype.update = function() {
                 , this
             );
             this.lastAttack = this.game.time.now;
-            this.animations.play('tower_attack', 12);
+            this.animations.play('tower_attack', 18);
             this.soundAttack.play();
         }
     }
