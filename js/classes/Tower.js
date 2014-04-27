@@ -55,7 +55,10 @@ App.Tower.prototype.update = function() {
         }
 
         if (target != -1) {
-            target.hurt(this.DAMAGES_TO_ENEMY);
+            this.game.time.events.add(Phaser.Timer.SECOND * 0.25,
+                function() {target.hurt(this.DAMAGES_TO_ENEMY);}
+                , this
+            );
             this.lastAttack = this.game.time.now;
             this.animations.play('attack', 12);
             this.soundAttack.play();

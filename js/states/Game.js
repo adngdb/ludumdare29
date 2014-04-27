@@ -197,12 +197,14 @@ App.Game.prototype = {
                     tower.build = false;
                     tower.alpha = 1;
                     tower.init();
-                    this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION,
-                        function() {
-                            this.player.building = false;
-                            tower.build = true;
-                        }, this
-                    );
+                    player.setBuildMode(tower);
+                    this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION, player.endBuildMode, player, tower);
+                    //     function() {
+                    //         this.player.building = false;
+                    //         tower.build = true;
+                    //         this.player.animations.stop(null, true);
+                    //     }, this
+                    // );
                 }
             }, null, this
         );
@@ -249,7 +251,7 @@ App.Game.prototype = {
             if (this.player.isInConstructMode) {
                 // this.time.events.add(Phaser.Timer.SECOND * 3, this.constructTower, this);
                 this.constructTower();
-                this.player.building = true;
+                // this.player.building = true;
             }
         }
     },
