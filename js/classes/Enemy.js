@@ -49,6 +49,7 @@ App.Enemy.prototype.init = function() {
     this.soundAppears.play();
     this.lastAttack = null;
     this.health = this.MAX_HEALTH;
+    this.lastPathComputation = null;
 };
 
 App.Enemy.prototype.update = function() {
