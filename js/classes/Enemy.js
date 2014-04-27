@@ -10,6 +10,17 @@ App.Enemy = function(game, x, y, target) {
     this.DAMAGES_TO_TOWER = 5; // in health points
     this.ATTACK_COOLDOWN = 2; // in seconds
 
+    // walk animation
+    this.animations.add('walk-w', this.range(0, 6));
+    this.animations.add('walk-e', this.range(12, 18));
+    this.animations.add('walk-n', this.range(24, 30));
+    this.animations.add('walk-s', this.range(36, 42));
+    // attack animation
+    this.animations.add('attack-w', this.range(6, 12));
+    this.animations.add('attack-e', this.range(18, 24));
+    this.animations.add('attack-n', this.range(30, 36));
+    this.animations.add('attack-s', this.range(42, 48));
+
     this.anchor.setTo(0.5, 0.5);
 
     this.lastAttack = null;
@@ -44,6 +55,7 @@ App.Enemy.prototype.update = function() {
         // Stop movement.
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
+        this.animations.stop(null, true);
 
         // Attack the target if the cooldown time has passed.
         if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
@@ -55,6 +67,9 @@ App.Enemy.prototype.update = function() {
     else {
         // Move towards the target.
         this.game.physics.arcade.moveToObject(this, this.target, this.SPEED);
+
+        var dir = this.getCardinalDirection();
+        this.animations.play('walk-' + dir, 12, true);
     }
 };
 
