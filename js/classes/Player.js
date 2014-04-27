@@ -3,7 +3,7 @@ App.Player = function (game, x, y) {
 
     this.game = game;
 
-    this.anchor.setTo(0.5, 0.5);
+    this.anchor.setTo(0.5, 3.0 / 4.0);
 
     // Create player's animations : walk
     this.animations.add('walk-w', this.range(0, 6));
@@ -34,6 +34,7 @@ App.Player = function (game, x, y) {
     this.towerTypeToConstruct = null;
 
     this.body.immovable = true;
+    this.body.setSize(24, 20, 12, 28);
     this.destination = new Phaser.Point(x, y);
 
     this.walkSound = this.game.add.audio('footstep');
@@ -56,23 +57,7 @@ App.Player.prototype = Object.create(App.Movable.prototype);
 App.Player.prototype.constructor = App.Player;
 
 App.Player.prototype.update = function () {
-    if ( (this.body.velocity.x != 0 || this.body.velocity.y != 0)
-      && this.game.physics.arcade.distanceBetween(this, this.destination) < this.MIN_DISTANCE_TO_MOVE) {
-        this.body.velocity.setTo(0, 0);
-        this.walkSound.pause();
-        if (!this.building) {
-            this.animations.stop(null, true);
-        }
-    }
-};
-
-App.Player.prototype.moveToObject = function (dest) {
-    this.destination.setTo(dest.x, dest.y);
-    this.game.physics.arcade.moveToObject(this, this.destination, this.SPEED);
-
-    this.walkSound.resume();
-    var dir = this.getCardinalDirection();
-    this.animations.play('walk-' + dir, 12, true);
+    this.followPath();
 };
 
 App.Player.prototype.setBuildMode = function(target) {

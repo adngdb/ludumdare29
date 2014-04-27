@@ -7,6 +7,14 @@ App.Movable = function (game, x, y, sprite) {
 
     // Enable physics on the movable.
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
+
+    this.walkSound = null;
+
+    this.path = {
+        next: null,
+        prev: null,
+        pathStack: []
+    };
 };
 
 // Movable is a type of Phaser.Sprite
@@ -56,4 +64,84 @@ App.Movable.prototype.getCardinalDirection = function (source, dest) {
     //Should never happen:
     console.warning("It's NOT supposed to do THAT");
     return "s";
+};
+
+App.Movable.prototype.moveToObject = function (dest) {
+    this.game.physics.arcade.moveToObject(this, dest, this.SPEED);
+
+    var dir = this.getCardinalDirection();
+    this.animations.play('walk-' + dir, 12, true);
+
+    if (this.walkSound) {
+        this.walkSound.resume();
+    }
+};
+
+App.Movable.prototype.stopMoving = function () {
+    if (this.body.velocity.x === 0 && this.body.velocity.y === 0) {
+        return;
+    }
+
+    this.body.velocity.setTo(0, 0);
+
+    if (!this.building) {
+        this.animations.stop(null, true);
+    }
+
+    if (this.walkSound) {
+        this.walkSound.pause();
+    }
+};
+
+App.Movable.prototype.setPath = function (path) {
+    if (this.path.pathStack.length !== 0) {
+        this.path.pathStack = [];
+    }
+    this.path.pathStack = this.path.pathStack.concat(path);
+};
+
+App.Movable.prototype._preparePath = function () {
+    if (this.path.pathStack.length === 0) {
+        return;
+    }
+
+    if (this.path.prev === null) {
+        this.path.prev = new Phaser.Point(this.body.x, this.body.y);
+    }
+
+    if (this.path.next === null) {
+        this.path.next = this.path.pathStack.shift();
+
+        this.moveToObject(this.path.next);
+    }
+};
+
+App.Movable.prototype.followPath = function () {
+    this._preparePath();
+
+    if (this.path.next === null) {
+        return;
+    }
+
+    var stepVector = new Phaser.Point(
+        this.path.next.x - this.path.prev.x,
+        this.path.next.y - this.path.prev.y
+    );
+    var currentVector = new Phaser.Point(
+        this.path.next.x - this.body.x,
+        this.path.next.y - this.body.y
+    );
+
+    if ((stepVector.x * currentVector.x < 0) || (stepVector.y * currentVector.y < 0)) {
+        // It's time to proceed to the next step of the path.
+        this.path.prev = null;
+        this.path.next = null;
+
+        if (this.path.pathStack.length === 0) {
+            this.stopMoving();
+            return;
+        }
+
+        this._preparePath();
+    }
 };

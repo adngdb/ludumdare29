@@ -42,6 +42,8 @@ App.Preloader.prototype = {
         this.load.spritesheet('muteToggle', 'assets/interface/sound.png', 16, 16);
         this.load.spritesheet('buttonTower1', 'assets/interface/ui-btn-tower-1.png', 35, 38);
 
+
+        this.load.tilemap('access_map', 'assets/maps/access.json', null, Phaser.Tilemap.TILED_JSON);
     },
 
     create: function() {

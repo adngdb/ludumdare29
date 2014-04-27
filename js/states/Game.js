@@ -41,6 +41,8 @@ App.Game = function(game) {
     this.creatingWave;
 
     this.score;
+
+    this.map;
 };
 
 App.Game.prototype = {
@@ -90,6 +92,16 @@ App.Game.prototype = {
         this.creatingWave = false;
 
         this.score = 0;
+
+        this.map = this.game.add.tilemap('access_map');
+        this.map.setCollisionBetween(1, 2);
+        this.access_layer = this.map.createLayer('access_map');
+        this.access_layer.debug = true;
+
+        this.walkableTiles = [3];
+        this.pathfinder = this.game.plugins.add(Phaser.Plugin.PathFinderPlugin);
+        this.pathfinder._easyStar.enableDiagonals();
+        this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
     },
 
     update: function() {
@@ -186,12 +198,10 @@ App.Game.prototype = {
         }
 
         // moving the player & collision
+        this.game.physics.arcade.collide(this.player, this.access_layer);
         this.game.physics.arcade.collide(this.player, this.enemyGroup);
         this.game.physics.arcade.collide(this.player, this.towerGroup,
             function (player, tower) {
-                player.x -= player.body.deltaX();
-                player.y -= player.body.deltaY();
-                player.destination.setTo(player.x, player.y);
                 if (tower.alpha == 0) {
                     tower.build = false;
                     tower.alpha = 1;
@@ -211,11 +221,13 @@ App.Game.prototype = {
             // is the player in construction mode ?
             if (null == this.choosenTowerType) {
                 this.choosenTowerType = this.game.add.sprite(this.input.x, this.input.y, this.player.towerTypeToConstruct);
-                this.choosenTowerType.anchor.setTo(0.5, 0.5);
+                this.choosenTowerType.anchor.setTo(0.5, 3.0 / 4.0);
                 this.choosenTowerType.alpha = 0.5;
             }
-            this.choosenTowerType.x = this.input.x;
-            this.choosenTowerType.y = this.input.y;
+
+            var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
+            this.choosenTowerType.x = targetTile.worldX + targetTile.centerX / 2;
+            this.choosenTowerType.y = targetTile.worldY + targetTile.centerY / 2;
         }
         else {
             if (null != this.choosenTowerType) {
@@ -238,11 +250,11 @@ App.Game.prototype = {
             this.cancelConstruction();
         }
 
-        if (this.inArena() && !this.player.building) {
-            this.player.moveToObject(new Phaser.Point(this.input.x, this.input.y));
+        if (!this.player.building) {
+            var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
+            this.computePath(this.player, targetTile);
 
             if (this.player.isInConstructMode) {
-                // this.time.events.add(Phaser.Timer.SECOND * 3, this.constructTower, this);
                 this.constructTower();
                 // this.player.building = true;
             }
@@ -255,7 +267,13 @@ App.Game.prototype = {
 
         // If there aren't any available, create a new one
         if (newTower === null) {
-            newTower = new App.Tower(this.game, this.input.x, this.input.y, this.player.towerTypeToConstruct, this.enemyGroup);
+            newTower = new App.Tower(
+                this.game,
+                this.choosenTowerType.x,
+                this.choosenTowerType.y,
+                this.player.towerTypeToConstruct,
+                this.enemyGroup
+            );
             this.towerGroup.add(newTower);
         }
         else {
@@ -263,9 +281,27 @@ App.Game.prototype = {
             newTower.revive();
 
             // Move the tower to the given coordinates
-            newTower.x = this.input.x;
-            newTower.y = this.input.y;
+            newTower.x = this.choosenTowerType.x;
+            newTower.y = this.choosenTowerType.y;
         }
+
+        // Add the tower to the collision map.
+        var tile = this.map.getTileWorldXY(this.choosenTowerType.x, this.choosenTowerType.y);
+        var surroundingTiles = [
+            tile,
+            this.map.getTileAbove(0, tile.x, tile.y),
+            this.map.getTileBelow(0, tile.x, tile.y),
+            this.map.getTileRight(0, tile.x, tile.y),
+            this.map.getTileLeft(0, tile.x, tile.y),
+        ];
+
+        for (var i = surroundingTiles.length - 1; i >= 0; i--) {
+            if (surroundingTiles[i]) {
+                surroundingTiles[i].index = 1;
+            }
+        }
+        this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
+
         this.player.deactivateConstructMode();
         newTower.alpha = 0;
     },
@@ -313,5 +349,23 @@ App.Game.prototype = {
         var det = (relX / this.RadiusX) * (relX / this.RadiusX) + (relY / this.RadiusY) * (relY / this.RadiusY);
 
         return (det <= 1);
+    },
+
+    computePath: function (fromObject, toTile) {
+        var self = this;
+        var fromTile = this.map.getTileWorldXY(fromObject.x, fromObject.y);
+
+        this.pathfinder.setCallbackFunction(function(path) {
+            path = path || [];
+            var realWorldPath = [];
+            for (var i = 0; i < path.length; i++) {
+                var step = self.map.getTile(path[i].x, path[i].y);
+                realWorldPath.push(new Phaser.Point(step.worldX + step.width / 2, step.worldY + step.height / 2));
+            };
+            fromObject.setPath(realWorldPath);
+        });
+
+        this.pathfinder.preparePathCalculation([fromTile.x, fromTile.y], [toTile.x, toTile.y]);
+        this.pathfinder.calculatePath();
     }
 };

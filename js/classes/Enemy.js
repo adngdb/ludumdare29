@@ -51,6 +51,7 @@ App.Enemy.prototype.init = function() {
 };
 
 App.Enemy.prototype.update = function() {
+    return;
     // This enemy moves towards the player constantly. It won't try to
     // attack towers.
     if (!this.exists) return;

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="64" height="50" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="access_map" tilewidth="16" tileheight="16">
+  <image source="../gfx/access_map.png" width="48" height="16"/>
+ </tileset>
+ <layer name="access_map" width="64" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2DESwyAMRFFI7n/ntCnAwwhJi8wvtvXwfuGx6a21zhhjjDG3fRymNijM1VqsnP1r3MktvK2WHre4T+mgdj91uMk965BhV1szG1RwRzWoZvduUNH+799pUNXu1eBmf3X7bgP8+PHrz48fP378+Pf8fP/a/VUb3PwP6HknWKlB1J1whQbR9+Envw+i7ac2GN3JR9lHDVQdRu4M+6xBVge1W9FhZla6VzpY26w8R+31aGGZ2pbZQ31uxhhj7M37AWWzF1U=
+  </data>
+ </layer>
+</map>

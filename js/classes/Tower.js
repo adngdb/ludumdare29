@@ -5,7 +5,7 @@ App.Tower = function(game, x, y, type, enemyGroup) {
     this.enemyGroup = enemyGroup;
     this.type = type;
 
-    this.anchor.setTo(0.5, 0.5);
+    this.anchor.setTo(0.5, 3.0 / 4.0);
 
     this.REACH_DISTANCE = 80; // in pixels
     this.DAMAGES_TO_ENEMY = 10; // in health points
@@ -22,6 +22,7 @@ App.Tower = function(game, x, y, type, enemyGroup) {
     // this.body.immovable = true;
     this.body.moves = false;
     this.build = false;
+    this.body.setSize(32, 32, 16, 32);
 
     this.lastAttack = null;
 
