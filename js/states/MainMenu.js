@@ -17,6 +17,10 @@ App.MainMenu.prototype = {
         var startButton = this.game.add.sprite(360, 360, bitmapButton);
         startButton.inputEnabled = true;
         startButton.events.onInputDown.add(this.startGame, this);
+
+        this.menuSound = this.game.add.audio('theme_menu');
+        this.menuSound.loop = true;
+        this.menuSound.play();
     },
 
     update: function() {
