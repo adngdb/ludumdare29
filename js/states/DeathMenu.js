@@ -10,8 +10,6 @@ App.DeathMenu.prototype = {
 //        this.add.text(this.world.centerX - 50, this.world.centerY - 120, text1, style);
 //        this.add.text(this.world.centerX - 50, this.world.centerY - 70, text2, style);
 
-        this.background = this.game.add.sprite(0, 0, 'background');
-
         this.gameOverBackground = this.game.add.sprite(this.world.centerX, this.world.centerY, 'game_over_menu');
         this.gameOverBackground.anchor.setTo(0.5, 0.5);
 
