@@ -357,11 +357,47 @@ App.Game.prototype = {
 
         this.pathfinder.setCallbackFunction(function(path) {
             path = path || [];
+
+            if (path.length === 0) {
+                return;
+            }
+
+            var i = 0;
+            var ln = path.length;
+            var optimizedPath = [path[0]];
+            var foundACollision;
+
+            while (i < ln - 2) {
+                foundACollision = false;
+
+                for (var j = i + 2; j < ln; j++) {
+                    var currentStep = path[i];
+                    var nextNextStep = path[j];
+
+                    var line = new Phaser.Line(currentStep.x * 16, currentStep.y * 16, nextNextStep.x * 16, nextNextStep.y * 16);
+                    if (self.access_layer.getRayCastTiles(line, 8, true).length > 0) {
+                        i = j - 1;
+                        optimizedPath.push(path[i]);
+                        foundACollision = true;
+                        break;
+                    }
+                }
+
+                if (!foundACollision) {
+                    break;
+                }
+            }
+
+            optimizedPath.push(path[ln - 1]);
+            optimizedPath.shift();
+
+            // Convert tiles coordinates to real world coordinates.
             var realWorldPath = [];
-            for (var i = 0; i < path.length; i++) {
-                var step = self.map.getTile(path[i].x, path[i].y);
+            for (i = 0, ln = optimizedPath.length; i < ln; i++) {
+                var step = self.map.getTile(optimizedPath[i].x, optimizedPath[i].y);
                 realWorldPath.push(new Phaser.Point(step.worldX + step.width / 2, step.worldY + step.height / 2));
             };
+
             fromObject.setPath(realWorldPath);
         });
 
