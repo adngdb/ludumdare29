@@ -12,9 +12,12 @@ App.VictoryMenu.prototype = {
 
         this.input.onDown.addOnce(this.startGame, this);
 
-        this.music = this.game.add.audio('theme_victory');
-        this.music.loop = true;
-        this.music.play();
+        this.victorySound = this.game.add.audio('theme_victory');
+        this.victorySound.play();
+
+        this.mainSound = this.game.add.audio('theme_fight');
+        this.mainSound.loop = true;
+        this.time.events.add(this.victorySound.duration, function () { this.mainSound.play(); }, this);
     },
 
     init: function(score) {

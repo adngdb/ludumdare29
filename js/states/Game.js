@@ -128,6 +128,7 @@ App.Game.prototype = {
             if (win) {
                 // if all enemy are dead
                 if (this.numberWave > this.MAX_WAVE_NUMBER) {
+                    this.player.stopWalkSound();
                     // Max number of wave reached and ALL enemy killed => VICTORY !!!
                     this.state.start('VictoryMenu', true, false, this.score);
                 }
