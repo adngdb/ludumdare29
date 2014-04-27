@@ -38,6 +38,7 @@ App.Enemy = function(game, x, y, target) {
     this.inputEnabled = true;
     this.events.onInputDown.add(this.clickListener, this);
 
+    this.lastPathComputation = null;
 };
 
 // Enemies are a type of Phaser.Sprite
@@ -51,15 +52,17 @@ App.Enemy.prototype.init = function() {
 };
 
 App.Enemy.prototype.update = function() {
-    return;
     // This enemy moves towards the player constantly. It won't try to
     // attack towers.
-    if (!this.exists) return;
+
+    if (!this.exists) {
+        return;
+    }
+
     // If the enemy is close enough to its target.
     if (this.game.physics.arcade.distanceBetween(this, this.target) <= this.REACH_DISTANCE) {
         // Stop movement.
-        this.body.velocity.x = 0;
-        this.body.velocity.y = 0;
+        this.stopMoving();
 
         // Attack the target if the cooldown time has passed.
         if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
@@ -72,13 +75,8 @@ App.Enemy.prototype.update = function() {
             this.animations.play('attack-' + dir, 12);
         }
     }
-    else {
-        // Move towards the target.
-        this.game.physics.arcade.moveToObject(this, this.target, this.SPEED);
 
-        var dir = this.getCardinalDirection();
-        this.animations.play('walk-' + dir, 12, true);
-    }
+    this.followPath();
 };
 
 App.Enemy.prototype.clickListener = function (element, pointer) {

@@ -85,6 +85,9 @@ App.Movable.prototype.stopMoving = function () {
     }
 
     this.body.velocity.setTo(0, 0);
+    this.path.prev = null;
+    this.path.next = null;
+    this.path.pathStack = [];
 
     if (!this.building) {
         this.animations.stop(null, true);

@@ -102,6 +102,8 @@ App.Game.prototype = {
         this.pathfinder = this.game.plugins.add(Phaser.Plugin.PathFinderPlugin);
         this.pathfinder._easyStar.enableDiagonals();
         this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
+
+        this.TIME_BETWEEN_PATH_COMPUTATION = 1; // in seconds
     },
 
     update: function() {
@@ -129,9 +131,20 @@ App.Game.prototype = {
                         this.player.tryHit(currEnemy);
                         currEnemy.isTargeted = false;
                     }
+
+                    if (
+                        !currEnemy.lastPathComputation ||
+                        this.game.time.elapsedSecondsSince(currEnemy.lastPathComputation) > this.TIME_BETWEEN_PATH_COMPUTATION
+                    ) {
+                        var targetTile = this.map.getTileWorldXY(this.player.x, this.player.y);
+                        this.computePath(currEnemy, targetTile);
+
+                        currEnemy.lastPathComputation = this.game.time.now;
+                    }
                 }
             }
         }
+
 
         // check Wave : End of game ? new one ?
         if (!this.creatingWave) {
@@ -343,16 +356,7 @@ App.Game.prototype = {
         }
         this.creatingWave = false;
         newEnemy.init();
-    },
-
-    inArena: function () {
-        // var inArena = true;
-        var relX = this.input.x - this.centerX;
-        var relY = this.input.y - this.centerY;
-
-        var det = (relX / this.RadiusX) * (relX / this.RadiusX) + (relY / this.RadiusY) * (relY / this.RadiusY);
-
-        return (det <= 1);
+        newEnemy.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))
     },
 
     computePath: function (fromObject, toTile) {
@@ -414,6 +418,7 @@ App.Game.prototype = {
                 realWorldPath.push(new Phaser.Point(step.worldX + step.width / 2, step.worldY + step.height / 2));
             };
 
+            fromObject.stopMoving();
             fromObject.setPath(realWorldPath);
         });
 
