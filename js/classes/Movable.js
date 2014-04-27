@@ -21,9 +21,17 @@ App.Movable.prototype.range = function (start, stop) {
     return arr;
 };
 
-App.Movable.prototype.getCardinalDirection = function () {
-    var dx = this.body.velocity.x;
-    var dy = this.body.velocity.y;
+App.Movable.prototype.getCardinalDirection = function (source, dest) {
+    var dx, dy;
+
+    if (typeof source === 'undefined') {
+        dx = this.body.velocity.x;
+        dy = this.body.velocity.y;
+    }
+    else {
+        dx = dest.x - source.x;
+        dy = dest.y - source.y;
+    }
 
     var directions = 4;
     var degree = 360 / directions;

@@ -14,6 +14,8 @@ App.Player = function (game, x, y) {
     // strength of player vs enemy
     this.DAMAGE_TO_ENEMY = 10;
     this.ATTACK_RANGE = 100;
+    this.ATTACK_COOLDOWN = 1; // in seconds
+    this.lastAttack = this.game.time.now;
 
     this.SPEED = 90; // in pixels per second
     this.MIN_DISTANCE_TO_MOVE = 10; // in pixels
@@ -71,9 +73,12 @@ App.Player.prototype.hurt = function (damages) {
 };
 
 App.Player.prototype.tryHit = function (target) {
-    if (this.game.physics.arcade.distanceBetween(this, target) < this.ATTACK_RANGE) {
-        this.stickAttackSound.restart();
-        target.hurt(this.DAMAGE_TO_ENEMY);
+
+    if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
+        if (this.game.physics.arcade.distanceBetween(this, target) < this.ATTACK_RANGE) {
+            target.hurt(this.DAMAGE_TO_ENEMY);
+            this.lastAttack = this.game.time.now;
+        }
     }
 };
 
