@@ -11,6 +11,10 @@ App.Player = function (game, x, y) {
     this.animations.add('walk-s', this.range(12, 18));
     this.animations.add('walk-e', this.range(18, 24));
 
+    // strength of player vs enemy
+    this.DAMAGE_TO_ENEMY = 10;
+    this.ATTACK_RANGE = 100;
+
     this.SPEED = 90; // in pixels per second
     this.MIN_DISTANCE_TO_MOVE = 10; // in pixels
 
@@ -59,6 +63,12 @@ App.Player.prototype.deactivateConstructMode = function () {
 
 App.Player.prototype.hurt = function (damages) {
     this.health -= damages;
+};
+
+App.Player.prototype.tryHit = function (target) {
+    if (this.game.physics.arcade.distanceBetween(this, target) < this.ATTACK_RANGE) {
+        target.hurt(this.DAMAGE_TO_ENEMY);
+    }
 };
 
 App.Player.prototype.setChoosenTowerType = function (towerType) {

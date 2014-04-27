@@ -14,10 +14,14 @@ App.Enemy = function(game, x, y, target) {
 
     this.lastAttack = null;
     this.health = 10;
+    this.isTargeted = false;
 
     this.soundAppears = this.game.add.audio('enemy_pig_appears');
     this.soundAttack = this.game.add.audio('enemy_pig_attack');
     this.soundDies = this.game.add.audio('enemy_pig_dies');
+
+    this.inputEnabled = true;
+    this.events.onInputDown.add(this.clickListener, this);
 
 };
 
@@ -52,6 +56,10 @@ App.Enemy.prototype.update = function() {
         // Move towards the target.
         this.game.physics.arcade.moveToObject(this, this.target, this.SPEED);
     }
+};
+
+App.Enemy.prototype.clickListener = function (element, pointer) {
+    this.isTargeted = true;
 };
 
 App.Enemy.prototype.hurt = function (damages) {

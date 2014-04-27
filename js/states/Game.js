@@ -41,6 +41,8 @@ App.Game = function(game) {
     this.waveCooldown;
     this.creatingWave;
 
+    this.isTargetedByPlayer;
+
     this.score;
 };
 
@@ -92,19 +94,63 @@ App.Game.prototype = {
     },
 
     update: function() {
+        // check Player : End Of Game : player dead
         if (this.player.health <= 0) {
             this.state.start('DeathMenu', true, false, this.score);
         }
+        // check Enemy : dead ? newTarget ?
         for (var i = this.enemyGroup.length-1; i>=0; i--)
         {
             var currEnemy = this.enemyGroup.getAt(i);
-            if (currEnemy.exists && (currEnemy.health <= 0) ){
-                this.score++;
-                currEnemy.soundDies.play();
-                currEnemy.kill();
+            if (currEnemy.exists) {
+                // is the enemy dead ?
+                if (currEnemy.health <= 0) {
+                    this.score++;
+                    currEnemy.soundDies.play();
+                    currEnemy.isTargeted = false;
+                    currEnemy.kill();
+                }
+                else {
+                    if (currEnemy.isTargeted) {
+                        this.player.tryHit(currEnemy);
+                        currEnemy.isTargeted = false;
+                    }
+                }
             }
         }
 
+        // check Wave : End of game ? new one ?
+        if (!this.creatingWave) {
+            // compute : are there any enemy alive ?
+            var index = this.enemyGroup.length-1;
+            var enemy = this.enemyGroup.getAt(index);
+            var win = true;
+            while (win && index >= 0) {
+                win = !enemy.exists;
+                index--;
+                enemy = this.enemyGroup.getAt(index);
+            }
+            if (win) {
+                // if all enemy are dead
+                if (this.numberWave > this.MAX_WAVE_NUMBER) {
+                    // Max number of wave reached and ALL enemy killed => VICTORY !!!
+                    this.state.start('VictoryMenu', true, false, this.score);
+                }
+                else {
+                    // create next wave
+                    if (!this.lastWave || this.game.time.elapsedSecondsSince(this.lastWave) > this.waveCooldown) {
+                        this.createNewWave();
+                        this.lastWave = this.game.time.now;
+                    }
+                }
+            }
+            else {
+                // some enemy are alive : reset cooldown for next wave
+                this.lastWave = this.game.time.now;
+            }
+        }
+
+        // moving the player & collision
         this.game.physics.arcade.collide(this.player, this.enemyGroup);
         this.game.physics.arcade.collide(this.player, this.towerGroup,
             function (player, tower) {
@@ -129,7 +175,9 @@ App.Game.prototype = {
 
         this.hud.update();
 
+        // tower creation
         if (this.player.isInConstructMode) {
+            // is the player in construction mode ?
             if (null == this.choosenTowerType) {
                 this.choosenTowerType = this.game.add.sprite(this.input.x, this.input.y, this.player.towerTypeToConstruct);
                 this.choosenTowerType.anchor.setTo(0.5, 0.5);
@@ -143,28 +191,6 @@ App.Game.prototype = {
                 this.choosenTowerType.destroy();
                 this.choosenTowerType = null;
             }
-        }
-        if (this.numberWave <= this.MAX_WAVE_NUMBER) {
-            if (!this.lastWave || this.game.time.elapsedSecondsSince(this.lastWave) > this.waveCooldown) {
-                this.createNewWave();
-                this.waveCooldown += 5 * 0.5;
-                this.lastWave = this.game.time.now;
-            }
-        }
-        else if (!this.creatingWave) {
-            var index = this.enemyGroup.length-1;
-            var enemy = this.enemyGroup.getAt(index);
-            var win = true;
-            while (win && index >= 0) {
-                win = !enemy.exists;
-                index--;
-                enemy = this.enemyGroup.getAt(index);
-            }
-            if (win) {
-                // Max number of wave reached and ALL enemy killed => VICTORY !!!
-                this.state.start('VictoryMenu', true, false, this.score);
-            }
-
         }
     },
 
