@@ -5,7 +5,7 @@ App.Enemy = function(game, x, y, target) {
     this.target = target;
 
     this.SPEED = 60; // in pixels per second
-    this.REACH_DISTANCE = 40; // in pixels
+    this.REACH_DISTANCE = 70; // in pixels
     this.DAMAGES_TO_PLAYER = 10; // in health points
     this.DAMAGES_TO_TOWER = 5; // in health points
     this.ATTACK_COOLDOWN = 2; // in seconds
@@ -16,10 +16,10 @@ App.Enemy = function(game, x, y, target) {
     this.animations.add('walk-n', this.range(24, 30));
     this.animations.add('walk-s', this.range(36, 42));
     // attack animation
-    this.animations.add('attack-w', this.range(6, 12));
-    this.animations.add('attack-e', this.range(18, 24));
-    this.animations.add('attack-n', this.range(30, 36));
-    this.animations.add('attack-s', this.range(42, 48));
+    this.animations.add('attack-w', [6, 7, 8, 9, 10, 11, 6]);
+    this.animations.add('attack-e', [18, 19, 20, 21, 22, 23, 18]);
+    this.animations.add('attack-n', [30, 31, 32, 33, 34, 35, 30]);
+    this.animations.add('attack-s', [42, 43, 44, 45, 46, 47, 42]);
 
     this.anchor.setTo(0.5, 0.5);
 
@@ -55,13 +55,16 @@ App.Enemy.prototype.update = function() {
         // Stop movement.
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
-        this.animations.stop(null, true);
 
         // Attack the target if the cooldown time has passed.
         if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
             this.target.hurt(this.DAMAGES_TO_PLAYER);
             this.lastAttack = this.game.time.now;
             this.soundAttack.play();
+
+            var dir = this.getCardinalDirection(this, this.target);
+            this.animations.stop(null, true);
+            this.animations.play('attack-' + dir, 12);
         }
     }
     else {
