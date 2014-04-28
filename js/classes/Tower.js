@@ -22,7 +22,7 @@ App.Tower = function(game, x, y, type, enemyGroup) {
     // this.body.immovable = true;
     this.body.moves = false;
     this.build = false;
-    this.body.setSize(32, 32, 16, 32);
+    this.body.setSize(32, 32, 1, 10);
 
     this.lastAttack = null;
 

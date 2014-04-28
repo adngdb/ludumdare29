@@ -40,6 +40,8 @@ App.Enemy = function(game, x, y, image, target) {
     this.inputEnabled = true;
     this.events.onInputDown.add(this.clickListener, this);
 
+    this.body.setSize(24, 20, 0, 10);
+
     this.lastPathComputation = null;
     this.attacking = false;
     this.currAnim = null;

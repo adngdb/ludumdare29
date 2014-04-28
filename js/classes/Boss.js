@@ -25,6 +25,8 @@ App.Boss = function(game, x, y, image, target) {
     this.walkSound.volume = 0.4;
     this.walkSound.play();
 
+    this.body.setSize(24, 20, 0, 10);
+
     this.soundAttack = this.game.add.audio('boss_attack');
 };
 

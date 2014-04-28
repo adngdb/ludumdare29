@@ -35,7 +35,7 @@ App.Player = function (game, x, y) {
     this.towerTypeToConstruct = null;
 
     this.body.immovable = true;
-    this.body.setSize(24, 20, 12, 28);
+    this.body.setSize(24, 20, 0, 10);
     this.destination = new Phaser.Point(x, y);
 
     this.walkSound = this.game.add.audio('footstep');
