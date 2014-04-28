@@ -2,6 +2,8 @@ App.HUD = function(game, player) {
 
     this.game = game;
     this.player = player;
+    this.lifeGauge;
+    this.lifeGaugeMaxSize;
 };
 
 App.HUD.prototype = {
@@ -11,6 +13,21 @@ App.HUD.prototype = {
 
         var buttonBar = this.game.add.sprite(this.game.world.centerX, this.game.height - 44, 'barre_hudingame');
         buttonBar.anchor.set(0.5);
+
+        var lifeBackgroundBar = this.game.add.sprite(this.game.world.centerX, 48, 'barre_hudingame');
+        lifeBackgroundBar.anchor.set(0.5);
+        lifeBackgroundBar.angle = 180;
+        lifeBackgroundBar.scale.x = 1.1;
+        lifeBackgroundBar.scale.y = 1.2;
+
+        var lifeBar = this.game.add.sprite(lifeBackgroundBar.x, lifeBackgroundBar.y - 5, 'barre_vie');
+        lifeBar.anchor.set(0.5);
+
+        this.lifeGauge = this.game.add.sprite(lifeBar.x - 59, lifeBar.y - 13, 'jauge_vie');
+        this.lifeGauge.cropEnabled = true;
+        this.lifeGaugeMaxSize = this.lifeGauge.width;
+
+        this.updateLifeGauge();
 
         var chooseTower1Button = this.game.add.button(this.game.width / 2 - 80, buttonBar.y + 10, 'buttonTower1', this.chooseTower, this);
         chooseTower1Button.anchor.set(0.5);
@@ -48,6 +65,7 @@ App.HUD.prototype = {
     },
 
     update: function() {
+        this.updateLifeGauge();
     },
 
     render: function() {
@@ -76,5 +94,10 @@ App.HUD.prototype = {
 
     shortcutChooseTower3: function(key) {
         this.chooseTower({'type' : 'tower3'});
+    },
+
+    updateLifeGauge: function() {
+        var croppedWidth = (this.player.health / this.player.maxHealth) * this.lifeGaugeMaxSize;
+        this.lifeGauge.crop({x : 0, y : 0 , width : croppedWidth, height : this.lifeGauge.height});
     }
 };

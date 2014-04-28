@@ -49,7 +49,8 @@ App.Player = function (game, x, y) {
 
     // Health of the player.
     // The game is lost if that number goes under zero.
-    this.health = 100;
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
     this.building = false;
     this.attacking = false;
 };
