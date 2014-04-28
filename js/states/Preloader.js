@@ -48,6 +48,7 @@ App.Preloader.prototype = {
         this.load.audio('tower1_bites', 'assets/sfx/tower1_bites.ogg');
         // audio for boss
         this.load.audio('boss_step', 'assets/sfx/boss_step.ogg');
+        this.load.audio('boss_attack', 'assets/sfx/boss_attack.ogg');
 
         this.load.tilemap('access_map', 'assets/maps/access.json', null, Phaser.Tilemap.TILED_JSON);
     },
