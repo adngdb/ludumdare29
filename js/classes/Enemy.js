@@ -3,6 +3,7 @@ App.Enemy = function(game, x, y, image, target) {
 
     this.game = game;
     this.target = target;
+    this.savePlayer = this.target;
 
     this.SPEED = 60; // in pixels per second
     this.REACH_DISTANCE = 70; // in pixels
@@ -58,6 +59,7 @@ App.Enemy.prototype.init = function() {
     this.lastPathComputation = null;
     this.spawn = false;
     this.currAnim = this.animations.play('spawn', 12);
+    this.target = this.savePlayer;
 };
 
 App.Enemy.prototype.update = function() {
@@ -68,9 +70,7 @@ App.Enemy.prototype.update = function() {
         return;
     }
     if (!this.spawn) {
-        console.log("!spawn");
         if (this.currAnim.isFinished) {
-        console.log("spawn finished");
             this.spawn = true;
         this.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))
         }
@@ -90,14 +90,22 @@ App.Enemy.prototype.update = function() {
 
         // Attack the target if the cooldown time has passed.
         if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
-            this.target.hurt(this.DAMAGES_TO_PLAYER);
-            this.lastAttack = this.game.time.now;
-            this.soundAttack.play();
 
-            var dir = this.getCardinalDirection(this, this.target);
             this.attacking = true;
             this.animations.stop(null, true);
+            var dir = this.getCardinalDirection(this, this.target);
             this.currAnim = this.animations.play('attack-' + dir, 12);
+            this.soundAttack.play();
+            if (this.target === this.savePlayer) {
+                this.target.hurt(this.DAMAGES_TO_PLAYER);
+            }
+            else {
+                this.target.hurt(this.DAMAGES_TO_TOWER);
+            }
+            this.lastAttack = this.game.time.now;
+            if (this.target.health <= 0) {
+                this.target = this.savePlayer;
+            }
         }
     }
 

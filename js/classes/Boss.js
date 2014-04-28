@@ -1,7 +1,7 @@
 App.Boss = function(game, x, y, image, target) {
     App.Enemy.call(this, game, x, y, image, target);
 
-    this.REACH_DISTANCE = 50; // in pixels
+    this.REACH_DISTANCE = 70; // in pixels
     this.DAMAGES_TO_PLAYER = 20; // in health points
     this.DAMAGES_TO_TOWER = 10; // in health points
     this.ATTACK_COOLDOWN = 1; // in seconds

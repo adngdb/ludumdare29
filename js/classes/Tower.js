@@ -11,6 +11,7 @@ App.Tower = function(game, x, y, type, enemyGroup) {
     this.DAMAGES_TO_ENEMY = 10; // in health points
     this.ATTACK_COOLDOWN = 1; // in seconds
     this.CONSTRUCTION_DURATION = 1; // in seconds
+    this.MAX_HEALTH = 20;
 
     // set animations for creation, attack and death
     this.animations.add('tower_creation', [5, 6, 7, 8, 9, 10]);
@@ -30,6 +31,8 @@ App.Tower = function(game, x, y, type, enemyGroup) {
     this.soundAttack = this.game.add.audio('tower1_bites');
     this.soundAttack.volume = 0.7;
     // this.soundDies = this.game.add.audio(''); // does not exist yet !!!
+
+    this.health = 10;
 };
 
 // Tower are a type of Phaser.Sprite
@@ -40,6 +43,11 @@ App.Tower.prototype.setBaseBuildingFrame = function() {
     this.animations.frame = 5;
 };
 
+App.Tower.prototype.buildingComplete = function() {
+    this.build = true;
+    this.health += this.MAX_HEALTH - 10;
+};
+
 App.Tower.prototype.init = function() {
     this.soundAppears.play();
     this.animations.play('tower_creation', 6 / this.CONSTRUCTION_DURATION);
@@ -47,7 +55,7 @@ App.Tower.prototype.init = function() {
 
 App.Tower.prototype.update = function() {
     // do nothing, if not build yet
-    if (this.alpha == 0.9 || !this.build) {
+    if (this.alpha == 0.9 || !this.build || !this.exists) {
         return;
     }
 
@@ -76,3 +84,11 @@ App.Tower.prototype.update = function() {
         }
     }
 }
+
+App.Tower.prototype.hurt = function (damages) {
+    this.health -= damages;
+    if (this.health <= 0) {
+        this.kill();
+    }
+};
+
