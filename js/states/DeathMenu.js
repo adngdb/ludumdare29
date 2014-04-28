@@ -20,6 +20,7 @@ App.DeathMenu.prototype = {
         this.input.onDown.addOnce(this.startGame, this);
 
         this.music = this.game.add.audio('theme_defeat');
+        this.music.loop = true;
         this.music.play();
     },
 

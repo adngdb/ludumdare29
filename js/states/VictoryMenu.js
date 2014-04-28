@@ -20,6 +20,7 @@ App.VictoryMenu.prototype = {
         this.input.onDown.addOnce(this.startGame, this);
 
         this.victorySound = this.game.add.audio('theme_victory');
+        this.victorySound.loop = true;
         this.victorySound.play();
     },
 
