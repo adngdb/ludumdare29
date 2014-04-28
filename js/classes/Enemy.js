@@ -21,6 +21,8 @@ App.Enemy = function(game, x, y, image, target) {
     this.animations.add('attack-e', [18, 19, 20, 21, 22, 23, 18]);
     this.animations.add('attack-n', [30, 31, 32, 33, 34, 35, 30]);
     this.animations.add('attack-s', [42, 43, 44, 45, 46, 47, 42]);
+    // spawn animation
+    this.animations.add('spawn', this.range(48, 54));
 
     this.anchor.setTo(0.5, 0.5);
 
@@ -42,6 +44,7 @@ App.Enemy = function(game, x, y, image, target) {
     this.attacking = false;
     this.currAnim = null;
 
+    this.spawn = false;
 };
 
 // Enemies are a type of Phaser.Sprite
@@ -53,6 +56,8 @@ App.Enemy.prototype.init = function() {
     this.lastAttack = null;
     this.health = this.MAX_HEALTH;
     this.lastPathComputation = null;
+    this.spawn = false;
+    this.currAnim = this.animations.play('spawn', 12);
 };
 
 App.Enemy.prototype.update = function() {
@@ -61,6 +66,17 @@ App.Enemy.prototype.update = function() {
 
     if (!this.exists) {
         return;
+    }
+    if (!this.spawn) {
+        console.log("!spawn");
+        if (this.currAnim.isFinished) {
+        console.log("spawn finished");
+            this.spawn = true;
+        this.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))
+        }
+        else{
+            return;
+        }
     }
 
     if (this.attacking && this.currAnim && this.currAnim.isFinished) {

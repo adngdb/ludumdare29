@@ -370,7 +370,6 @@ App.Game.prototype = {
 
         this.creatingWave = false;
         newEnemy.init();
-        newEnemy.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))
     },
 
     computePath: function (fromObject, toTile) {

@@ -5,7 +5,7 @@ App.Boss = function(game, x, y, image, target) {
     this.DAMAGES_TO_PLAYER = 20; // in health points
     this.DAMAGES_TO_TOWER = 10; // in health points
     this.ATTACK_COOLDOWN = 1; // in seconds
-    this.MAX_HEALTH = 40;
+    this.MAX_HEALTH = 400;
 
     // walk animation
     this.animations.add('walk-e', this.range(0, 6));
@@ -17,6 +17,8 @@ App.Boss = function(game, x, y, image, target) {
     this.animations.add('attack-n', this.range(18, 24));
     this.animations.add('attack-s', this.range(30, 36));
     this.animations.add('attack-w', this.range(42, 48));
+    // spawn animation
+    this.animations.add('spawn', this.range(48, 54));
 
     this.walkSound = this.game.add.audio('boss_step');
     this.walkSound.loop = true;
