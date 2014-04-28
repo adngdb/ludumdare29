@@ -29,15 +29,15 @@ App.HUD.prototype = {
         var threeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
         threeKey.onDown.add(this.shortcutChooseTower3, this);
 
-        var style = { font: "16px Arial", fill: "cyan", align: "center" };
+        var style = { font: "16px custom", fill: "#794B23", align: "center" };
         var text1  = "1";
-        var towerShortcut = this.game.add.text(this.chooseTower1Button.x + 64, this.chooseTower1Button.y +2, text1, style);
+        var towerShortcut = this.game.add.text(this.chooseTower1Button.x + 78, this.chooseTower1Button.y + 18, text1, style);
         towerShortcut.anchor.set(0.5);
         var text2  = "2";
-        var towerShortcut = this.game.add.text(this.chooseTower2Button.x + 64, this.chooseTower2Button.y +2, text2, style);
+        var towerShortcut = this.game.add.text(this.chooseTower2Button.x + 78, this.chooseTower2Button.y + 18, text2, style);
         towerShortcut.anchor.set(0.5);
         var text3  = "3";
-        var towerShortcut = this.game.add.text(this.chooseTower3Button.x + 64, this.chooseTower3Button.y +2, text3, style);
+        var towerShortcut = this.game.add.text(this.chooseTower3Button.x + 78, this.chooseTower3Button.y + 18, text3, style);
         towerShortcut.anchor.set(0.5);
     },
 
