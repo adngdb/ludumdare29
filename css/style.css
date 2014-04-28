@@ -2,3 +2,9 @@
     font-family: 'custom';
     src: url('../assets/gfx/Soft-Sugar-plain/Softplain.ttf');
 }
+
+body {
+    background-color: black;
+    margin: 0;
+    padding: 0;
+}
