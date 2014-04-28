@@ -68,6 +68,7 @@ App.Player.prototype.update = function () {
 App.Player.prototype.setBuildMode = function(target) {
     var dir = this.getCardinalDirection(this, target);
     this.currAnim = this.animations.play('build-' + dir, 12, true);
+    this.walkSound.pause();
     this.building = true;
 };
 
@@ -100,6 +101,7 @@ App.Player.prototype.tryHit = function (target) {
                 , this
             );
             this.stickAttackSound.play();
+            this.walkSound.pause();
             this.lastAttack = this.game.time.now;
             this.body.velocity.setTo(0, 0);
             this.attacking = true;

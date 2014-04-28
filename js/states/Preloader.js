@@ -16,8 +16,8 @@ App.Preloader.prototype = {
         this.load.setPreloadSprite(this.preloadBar);
 
         this.load.spritesheet('player', 'assets/gfx/player.png', this.PLAYER_SIZE, this.PLAYER_SIZE);
-        this.load.spritesheet('tower1', 'assets/gfx/tower.png', this.TOWER_SIZE, this.TOWER_SIZE);
-        this.load.spritesheet('enemy', 'assets/gfx/enemy.png', this.ENEMY_SIZE, this.ENEMY_SIZE);
+        this.load.spritesheet('tower1', 'assets/gfx/tower1.png', this.TOWER_SIZE, this.TOWER_SIZE);
+        this.load.spritesheet('enemy1', 'assets/gfx/enemy1.png', this.ENEMY_SIZE, this.ENEMY_SIZE);
         this.load.image('background', 'assets/gfx/background.png');
         this.load.image('title_menu', 'assets/interface/menu_titre_place_holder.png');
         this.load.image('game_over_menu', 'assets/interface/menu_game_over.png');

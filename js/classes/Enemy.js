@@ -1,5 +1,5 @@
 App.Enemy = function(game, x, y, target) {
-    App.Movable.call(this, game, x, y, 'enemy');
+    App.Movable.call(this, game, x, y, 'enemy1');
 
     this.game = game;
     this.target = target;
