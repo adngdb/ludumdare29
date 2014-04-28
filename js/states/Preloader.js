@@ -26,7 +26,7 @@ App.Preloader.prototype = {
         this.load.image('game_over_menu', 'assets/interface/menu_game_over.png');
         this.load.image('victory_menu', 'assets/interface/menu_victory01.png');
 
-        this.load.spritesheet('muteToggle', 'assets/interface/sound.png', 16, 16);
+        this.load.spritesheet('muteToggle', 'assets/interface/sound.png', 128, 128);
         this.load.spritesheet('buttonTower1', 'assets/interface/ui-btn-tower-1.png', 128, 128);
         this.load.spritesheet('buttonTower2', 'assets/interface/ui-btn-tower-2.png', 128, 128);
         this.load.spritesheet('buttonTower3', 'assets/interface/ui-btn-tower-3.png', 128, 128);
