@@ -237,8 +237,8 @@ App.Game.prototype = {
             }
 
             var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
-            this.choosenTowerType.x = targetTile.worldX + targetTile.centerX / 2;
-            this.choosenTowerType.y = targetTile.worldY + targetTile.centerY / 2;
+            this.choosenTowerType.x = targetTile.worldX + targetTile.width / 2;
+            this.choosenTowerType.y = targetTile.worldY + targetTile.height / 2;
         }
         else {
             if (null != this.choosenTowerType) {
@@ -265,7 +265,7 @@ App.Game.prototype = {
             var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
             this.computePath(this.player, targetTile);
 
-            if (this.player.isInConstructMode) {
+            if (this.player.isInConstructMode && targetTile.index === 3) {
                 this.constructTower();
                 // this.player.building = true;
             }
