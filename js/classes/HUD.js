@@ -7,17 +7,37 @@ App.HUD = function(game, player) {
 App.HUD.prototype = {
     create: function() {
         this.soundToggle = this.game.add.button(this.game.width - 50, 15, 'muteToggle', this.toggleSound, this);
-        this.muteSound();
+        this.soundToggle.frame = 1;
 
-        this.chooseTowerButton = this.game.add.button(this.game.width / 2, 15, 'buttonTower1', this.chooseTower, this);
-        this.chooseTowerButton.type = 'tower';
+        this.chooseTower1Button = this.game.add.button(this.game.width / 2 - 180, this.game.height - 110, 'buttonTower1', this.chooseTower, this);
+        this.chooseTower1Button.scale.x = 0.75;
+        this.chooseTower1Button.scale.y = 0.75;
+        this.chooseTower1Button.type = 'tower1';
+        this.chooseTower2Button = this.game.add.button(this.chooseTower1Button.x + 128, this.chooseTower1Button.y, 'buttonTower2', this.chooseTower, this);
+        this.chooseTower2Button.scale.x = 0.75;
+        this.chooseTower2Button.scale.y = 0.75;
+        this.chooseTower2Button.type = 'tower2';
+        this.chooseTower3Button = this.game.add.button(this.chooseTower2Button.x + 128, this.chooseTower1Button.y, 'buttonTower3', this.chooseTower, this);
+        this.chooseTower3Button.scale.x = 0.75;
+        this.chooseTower3Button.scale.y = 0.75;
+        this.chooseTower3Button.type = 'tower3';
 
-        var tKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
-        tKey.onDown.add(this.shortcutChooseTower, this);
+        var oneKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+        oneKey.onDown.add(this.shortcutChooseTower1, this);
+        var twoKey = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+        twoKey.onDown.add(this.shortcutChooseTower2, this);
+        var threeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+        threeKey.onDown.add(this.shortcutChooseTower3, this);
 
-        var text  = "T";
-        var style = { font: "16px Arial", fill: "white", align: "center" };
-        var towerShortcut = this.game.add.text(this.chooseTowerButton.x + 18, this.chooseTowerButton.y + 45, text, style);
+        var style = { font: "16px Arial", fill: "cyan", align: "center" };
+        var text1  = "1";
+        var towerShortcut = this.game.add.text(this.chooseTower1Button.x + 64, this.chooseTower1Button.y +2, text1, style);
+        towerShortcut.anchor.set(0.5);
+        var text2  = "2";
+        var towerShortcut = this.game.add.text(this.chooseTower2Button.x + 64, this.chooseTower2Button.y +2, text2, style);
+        towerShortcut.anchor.set(0.5);
+        var text3  = "3";
+        var towerShortcut = this.game.add.text(this.chooseTower3Button.x + 64, this.chooseTower3Button.y +2, text3, style);
         towerShortcut.anchor.set(0.5);
     },
 
@@ -29,35 +49,26 @@ App.HUD.prototype = {
 
     toggleSound: function()
     {
-        if (this.game.sound._muted) {
-            this.unmuteSound();
-        }
-        else {
-            this.muteSound();
-        }
-    },
-
-    unmuteSound: function() {
-        this.game.sound.mute   = false;
-        this.soundMuted        = false;
-        this.soundToggle.frame = 1;
-    },
-
-    muteSound: function() {
-        this.game.sound.mute   = true;
-        this.soundMuted        = true;
-        this.soundToggle.frame = 0;
+        this.game.sound.mute = !this.game.sound.mute;
+        this.soundMuted = !this.soundMuted;
+        this.soundToggle.frame = 1 - this.soundToggle.frame;
     },
 
     chooseTower: function(element) {
-        this.player.setChoosenTowerType(element.type);
+        console.log("when implemented : change UI to build tower 2 and 3")
+        // this.player.setChoosenTowerType(element.type);
+        this.player.setChoosenTowerType('tower1');
     },
 
-    shortcutChooseTower: function(key) {
-        switch(key.keyCode) {
-            case Phaser.Keyboard.T:
-                this.chooseTower({'type' : 'tower'});
-                break;
-        }
-    }
+    shortcutChooseTower1: function(key) {
+        this.chooseTower({'type' : 'tower1'});
+    },
+
+    shortcutChooseTower2: function(key) {
+        this.chooseTower({'type' : 'tower2'});
+    },
+
+    shortcutChooseTower3: function(key) {
+        this.chooseTower({'type' : 'tower3'});
+    },
 };

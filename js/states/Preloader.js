@@ -16,7 +16,7 @@ App.Preloader.prototype = {
         this.load.setPreloadSprite(this.preloadBar);
 
         this.load.spritesheet('player', 'assets/gfx/player.png', this.PLAYER_SIZE, this.PLAYER_SIZE);
-        this.load.spritesheet('tower', 'assets/gfx/tower.png', this.TOWER_SIZE, this.TOWER_SIZE);
+        this.load.spritesheet('tower1', 'assets/gfx/tower.png', this.TOWER_SIZE, this.TOWER_SIZE);
         this.load.spritesheet('enemy', 'assets/gfx/enemy.png', this.ENEMY_SIZE, this.ENEMY_SIZE);
         this.load.image('background', 'assets/gfx/background.png');
         this.load.image('title_menu', 'assets/interface/menu_titre_place_holder.png');
@@ -40,7 +40,9 @@ App.Preloader.prototype = {
         this.load.audio('tower1_bites', 'assets/sfx/tower1_bites.ogg');
 
         this.load.spritesheet('muteToggle', 'assets/interface/sound.png', 16, 16);
-        this.load.spritesheet('buttonTower1', 'assets/interface/ui-btn-tower-1.png', 35, 38);
+        this.load.spritesheet('buttonTower1', 'assets/interface/ui-btn-tower-1.png', 128, 128);
+        this.load.spritesheet('buttonTower2', 'assets/interface/ui-btn-tower-2.png', 128, 128);
+        this.load.spritesheet('buttonTower3', 'assets/interface/ui-btn-tower-3.png', 128, 128);
 
 
         this.load.tilemap('access_map', 'assets/maps/access.json', null, Phaser.Tilemap.TILED_JSON);

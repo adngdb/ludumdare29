@@ -39,6 +39,9 @@ App.Enemy = function(game, x, y, target) {
     this.events.onInputDown.add(this.clickListener, this);
 
     this.lastPathComputation = null;
+    this.attacking = false;
+    this.currAnim = null;
+
 };
 
 // Enemies are a type of Phaser.Sprite
@@ -60,6 +63,10 @@ App.Enemy.prototype.update = function() {
         return;
     }
 
+    if (this.attacking && this.currAnim && this.currAnim.isFinished) {
+        this.attacking = false;
+    }
+
     // If the enemy is close enough to its target.
     if (this.game.physics.arcade.distanceBetween(this, this.target) <= this.REACH_DISTANCE) {
         // Stop movement.
@@ -72,8 +79,9 @@ App.Enemy.prototype.update = function() {
             this.soundAttack.play();
 
             var dir = this.getCardinalDirection(this, this.target);
+            this.attacking = true;
             this.animations.stop(null, true);
-            this.animations.play('attack-' + dir, 12);
+            this.currAnim = this.animations.play('attack-' + dir, 12);
         }
     }
 

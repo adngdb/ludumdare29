@@ -1,5 +1,5 @@
 App.Tower = function(game, x, y, type, enemyGroup) {
-    Phaser.Sprite.call(this, game, x, y, 'tower');
+    Phaser.Sprite.call(this, game, x, y, 'tower1');
 
     this.game = game;
     this.enemyGroup = enemyGroup;
