@@ -15,6 +15,8 @@ App.Movable = function (game, x, y, sprite) {
         prev: null,
         pathStack: []
     };
+
+    this.currentCardinalDirection = 's';
 };
 
 // Movable is a type of Phaser.Sprite
@@ -50,19 +52,24 @@ App.Movable.prototype.getCardinalDirection = function (source, dest) {
     }
 
     if (angle >= 0 * degree && angle < 1 * degree) {
+        this.currentCardinalDirection = 'e';
         return "e";
     }
     if (angle >= 1 * degree && angle < 2 * degree) {
+        this.currentCardinalDirection = 's';
         return "s";
     }
     if (angle >= 2 * degree && angle < 3 * degree) {
+        this.currentCardinalDirection = 'w';
         return "w";
     }
     if (angle >= 3 * degree && angle < 4 * degree) {
+        this.currentCardinalDirection = 'n';
         return "n";
     }
     //Should never happen:
     console.warning("It's NOT supposed to do THAT");
+    this.currentCardinalDirection = 's';
     return "s";
 };
 
@@ -85,7 +92,7 @@ App.Movable.prototype.stopMoving = function () {
     this.path.next = null;
     this.path.pathStack = [];
 
-    if (!this.building && !this.attacking) {
+    if (!this.building && !this.attacking && this.health > 0) {
         this.animations.stop(null, true);
     }
 

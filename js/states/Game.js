@@ -122,7 +122,6 @@ App.Game.prototype = {
             this.player.stopMoving();
             this.enemyGroup.callAll('stopMoving');
 
-            // this.player.animations.play('death');
             var deathTimer = this.game.time.create();
             deathTimer.add(1000, function () {
                 this.stopSound();

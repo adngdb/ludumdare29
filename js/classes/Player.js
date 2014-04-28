@@ -20,6 +20,12 @@ App.Player = function (game, x, y) {
     this.animations.add('build-n', this.range(30, 36)); //[30, 31, 32, 33, 34, 35, 30]);
     this.animations.add('build-s', this.range(48, 54)); //[48, 49, 50, 51, 52, 53, 48]);
     this.animations.add('build-e', this.range(66, 72)); //[66, 67, 68, 69, 70, 71, 66]);
+    // Animation for death
+    this.animations.add('death-w', this.range(72, 78));
+    this.animations.add('death-e', this.range(78, 84));
+    this.animations.add('death-n', this.range(84, 90));
+    this.animations.add('death-s', this.range(90, 96));
+
     this.currAnim = null;
 
     // strength of player vs enemy
@@ -89,6 +95,10 @@ App.Player.prototype.deactivateConstructMode = function () {
 
 App.Player.prototype.hurt = function (damages) {
     this.health -= damages;
+
+    if (this.health <= 0) {
+        this.currAnim = this.animations.play('death-' + this.currentCardinalDirection, 12);
+    }
 };
 
 App.Player.prototype.tryHit = function (target) {
