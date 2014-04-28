@@ -163,6 +163,13 @@ App.Game.prototype = {
             }
         }
 
+        for (var i = this.towerGroup.length - 1; i >= 0; i--) {
+            var tower = this.towerGroup.getAt(i);
+
+            if (tower.exists && tower.health <= 0) {
+                this.destructTower(tower);
+            }
+        }
 
         // check Wave : End of game ? new one ?
         if (!this.creatingWave) {
@@ -355,6 +362,31 @@ App.Game.prototype = {
         this.player.deactivateConstructMode();
         newTower.alpha = 0.9;
         newTower.setBaseBuildingFrame();
+    },
+
+    destructTower: function (tower) {
+        tower.kill();
+
+        // Remove the tower from the collision map.
+        var tile = this.map.getTileWorldXY(tower.x, tower.y);
+        var surroundingTiles = [
+            tile,
+            this.map.getTileAbove(0, tile.x, tile.y),
+            this.map.getTileBelow(0, tile.x, tile.y),
+            this.map.getTileRight(0, tile.x, tile.y),
+            this.map.getTileLeft(0, tile.x, tile.y),
+        ];
+
+        for (var i = surroundingTiles.length - 1; i >= 0; i--) {
+            if (surroundingTiles[i]) {
+                surroundingTiles[i].index = 3;
+                surroundingTiles[i].collideDown = false;
+                surroundingTiles[i].collideLeft = false;
+                surroundingTiles[i].collideRight = false;
+                surroundingTiles[i].collideUp = false;
+            }
+        }
+        this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
     },
 
     cancelConstruction: function () {

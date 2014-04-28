@@ -26,6 +26,8 @@ App.Player = function (game, x, y) {
     this.animations.add('death-n', this.range(84, 90));
     this.animations.add('death-s', this.range(90, 96));
 
+    this.animations.frame = 42;
+
     this.currAnim = null;
 
     // strength of player vs enemy

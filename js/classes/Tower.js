@@ -87,8 +87,5 @@ App.Tower.prototype.update = function() {
 
 App.Tower.prototype.hurt = function (damages) {
     this.health -= damages;
-    if (this.health <= 0) {
-        this.kill();
-    }
 };
 
