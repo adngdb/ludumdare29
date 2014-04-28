@@ -79,9 +79,6 @@ App.Movable.prototype.moveToObject = function (dest) {
 };
 
 App.Movable.prototype.stopMoving = function () {
-    // if (this.body.velocity.x === 0 && this.body.velocity.y === 0) {
-    //     return;
-    // }
 
     this.body.velocity.setTo(0, 0);
     this.path.prev = null;
@@ -132,8 +129,8 @@ App.Movable.prototype.followPath = function () {
         this.path.next.y - this.path.prev.y
     );
     var currentVector = new Phaser.Point(
-        this.path.next.x - this.body.x,
-        this.path.next.y - this.body.y
+        this.path.next.x - this.x,
+        this.path.next.y - this.y
     );
 
     if ((stepVector.x * currentVector.x < 0) || (stepVector.y * currentVector.y < 0)) {
