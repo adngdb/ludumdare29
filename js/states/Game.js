@@ -303,13 +303,16 @@ App.Game.prototype = {
             this.cancelConstruction();
         }
 
+        if (this.gameEnded) {
+            return;
+        }
+
         if (!this.player.building && !this.player.attacking) {
             var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
             this.computePath(this.player, targetTile);
 
             if (this.player.isInConstructMode && targetTile.index === 3) {
                 this.constructTower();
-                // this.player.building = true;
             }
         }
     },
