@@ -5,6 +5,7 @@ App.Preloader = function(game) {
     this.PLAYER_SIZE = 48;
     this.TOWER_SIZE = 64;
     this.ENEMY_SIZE = 48;
+    this.BOSS_SIZE = 64;
 };
 
 App.Preloader.prototype = {
@@ -18,10 +19,17 @@ App.Preloader.prototype = {
         this.load.spritesheet('player', 'assets/gfx/player.png', this.PLAYER_SIZE, this.PLAYER_SIZE);
         this.load.spritesheet('tower1', 'assets/gfx/tower1.png', this.TOWER_SIZE, this.TOWER_SIZE);
         this.load.spritesheet('enemy1', 'assets/gfx/enemy1.png', this.ENEMY_SIZE, this.ENEMY_SIZE);
+        this.load.spritesheet('boss', 'assets/gfx/boss.png', this.BOSS_SIZE, this.BOSS_SIZE);
+
         this.load.image('background', 'assets/gfx/background.png');
         this.load.image('title_menu', 'assets/interface/menu_titre_place_holder.png');
         this.load.image('game_over_menu', 'assets/interface/menu_game_over.png');
         this.load.image('victory_menu', 'assets/interface/menu_victory01.png');
+
+        this.load.spritesheet('muteToggle', 'assets/interface/sound.png', 16, 16);
+        this.load.spritesheet('buttonTower1', 'assets/interface/ui-btn-tower-1.png', 128, 128);
+        this.load.spritesheet('buttonTower2', 'assets/interface/ui-btn-tower-2.png', 128, 128);
+        this.load.spritesheet('buttonTower3', 'assets/interface/ui-btn-tower-3.png', 128, 128);
 
         // audio for background soundtrack
         this.load.audio('theme_relax', 'assets/sfx/theme_main_relax.ogg');
@@ -38,12 +46,6 @@ App.Preloader.prototype = {
         // audio for tower 1
         this.load.audio('tower1_appears', 'assets/sfx/tower1_appears.ogg');
         this.load.audio('tower1_bites', 'assets/sfx/tower1_bites.ogg');
-
-        this.load.spritesheet('muteToggle', 'assets/interface/sound.png', 16, 16);
-        this.load.spritesheet('buttonTower1', 'assets/interface/ui-btn-tower-1.png', 128, 128);
-        this.load.spritesheet('buttonTower2', 'assets/interface/ui-btn-tower-2.png', 128, 128);
-        this.load.spritesheet('buttonTower3', 'assets/interface/ui-btn-tower-3.png', 128, 128);
-
 
         this.load.tilemap('access_map', 'assets/maps/access.json', null, Phaser.Tilemap.TILED_JSON);
     },

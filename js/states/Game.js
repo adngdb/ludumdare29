@@ -336,20 +336,34 @@ App.Game.prototype = {
 
     createNewWave: function() {
         if (this.waveTimer !== null) this.waveTimer.destroy();
+
+        var numberEnemiesInWave = this.numberWave * 5;
+
         this.waveTimer = this.game.time.create();
-        this.waveTimer.repeat(500, this.numberWave * 5, this.createEnemy, this);
+        this.waveTimer.repeat(500, numberEnemiesInWave, this.createEnemy, this, false);
         this.waveTimer.start();
+
+        if (this.MAX_WAVE_NUMBER <= this.numberWave) {
+            this.game.time.events.add(500 * Math.round(numberEnemiesInWave / 2), this.createEnemy, this, true);
+        }
+
         this.creatingWave = true;
         this.numberWave++;
     },
 
-    createEnemy: function() {
-        var newEnemy = this.enemyGroup.getFirstDead();
+    createEnemy: function(createBoss) {
         var param = Math.random();
         var newX = this.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);
         var newY = this.centerY + (this.RadiusY + 50) * Math.sin(param * 2 * Math.PI);
+
+        var newEnemy = this.enemyGroup.getFirstDead();
+        if (createBoss) {
+            newEnemy = new App.Boss(this.game, newX, newY, 'boss', this.player);
+            this.enemyGroup.add(newEnemy);
+        }
+
         if (newEnemy === null) {
-            newEnemy = new App.Enemy(this.game, newX, newY, this.player);
+            newEnemy = new App.Enemy(this.game, newX, newY, 'enemy1', this.player);
             this.enemyGroup.add(newEnemy);
         }
         else {
@@ -357,6 +371,7 @@ App.Game.prototype = {
             newEnemy.y = newY;
             newEnemy.revive();
         }
+
         this.creatingWave = false;
         newEnemy.init();
         newEnemy.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))

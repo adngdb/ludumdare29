@@ -70,5 +70,5 @@ App.HUD.prototype = {
 
     shortcutChooseTower3: function(key) {
         this.chooseTower({'type' : 'tower3'});
-    },
+    }
 };
