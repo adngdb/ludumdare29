@@ -124,6 +124,7 @@ App.Game.prototype = {
                     this.score++;
                     currEnemy.soundDies.play();
                     currEnemy.isTargeted = false;
+                    currEnemy.stopMoving();
                     currEnemy.kill();
                 }
                 else {
