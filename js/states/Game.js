@@ -104,14 +104,34 @@ App.Game.prototype = {
         this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
 
         this.TIME_BETWEEN_PATH_COMPUTATION = 1; // in seconds
+
+        this.gameEnded = false;
     },
 
     update: function() {
+        if (this.gameEnded) {
+            return;
+        }
+
         // check Player : End Of Game : player dead
         if (this.player.health <= 0) {
-            this.stopSound();
-            this.state.start('DeathMenu', true, false, this.score);
+            // The game is over, let's pause it until we go to the next state.
+            this.gameEnded = true;
+
+            // Stop all movements.
+            this.player.stopMoving();
+            this.enemyGroup.callAll('stopMoving');
+
+            // this.player.animations.play('death');
+            var deathTimer = this.game.time.create();
+            deathTimer.add(1000, function () {
+                this.stopSound();
+                this.state.start('DeathMenu', true, false, this.score);
+            }, this);
+
+            deathTimer.start();
         }
+
         // check Enemy : dead ? newTarget ?
         for (var i = this.enemyGroup.length-1; i>=0; i--)
         {
@@ -176,8 +196,20 @@ App.Game.prototype = {
 
                 if (this.numberWave > this.MAX_WAVE_NUMBER) {
                     // Max number of wave reached and ALL enemy killed => VICTORY !!!
-                    this.stopSound();
-                    this.state.start('VictoryMenu', true, false, this.score);
+                    this.gameEnded = true;
+
+                    // Stop all movements.
+                    this.player.stopMoving();
+                    this.enemyGroup.callAll('stopMoving');
+
+                    // this.player.animations.play('victory');
+                    var victoryTimer = this.game.time.create();
+                    victoryTimer.add(1000, function () {
+                        this.stopSound();
+                        this.state.start('VictoryMenu', true, false, this.score);
+                    }, this);
+
+                    victoryTimer.start();
                 }
                 else {
                     // create next wave

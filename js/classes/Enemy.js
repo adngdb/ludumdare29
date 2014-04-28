@@ -74,9 +74,9 @@ App.Enemy.prototype.update = function() {
     if (!this.spawn) {
         if (this.currAnim.isFinished) {
             this.spawn = true;
-        this.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))
+            this.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY));
         }
-        else{
+        else {
             return;
         }
     }
@@ -91,8 +91,13 @@ App.Enemy.prototype.update = function() {
         this.stopMoving();
 
         // Attack the target if the cooldown time has passed.
-        if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
-
+        if (
+            (
+                !this.lastAttack ||
+                this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN
+            ) &&
+            this.target.health !== 0
+        ) {
             this.attacking = true;
             this.animations.stop(null, true);
             var dir = this.getCardinalDirection(this, this.target);
