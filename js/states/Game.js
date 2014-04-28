@@ -215,11 +215,12 @@ App.Game.prototype = {
         this.game.physics.arcade.collide(this.player, this.enemyGroup);
         this.game.physics.arcade.collide(this.player, this.towerGroup,
             function (player, tower) {
-                if (tower.alpha == 0) {
+                if (tower.alpha == 0.9) {
                     tower.build = false;
                     tower.alpha = 1;
                     tower.init();
                     player.setBuildMode(tower);
+                    player.stopMoving();
                     this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION, player.endBuildMode, player, tower);
                 }
             }, null, this
@@ -263,7 +264,7 @@ App.Game.prototype = {
             this.cancelConstruction();
         }
 
-        if (!this.player.building) {
+        if (!this.player.building && !this.player.attacking) {
             var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
             this.computePath(this.player, targetTile);
 
@@ -320,7 +321,8 @@ App.Game.prototype = {
         this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
 
         this.player.deactivateConstructMode();
-        newTower.alpha = 0;
+        newTower.alpha = 0.9;
+        newTower.setBaseBuildingFrame();
     },
 
     cancelConstruction: function () {

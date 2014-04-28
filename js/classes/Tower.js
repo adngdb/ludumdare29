@@ -36,6 +36,10 @@ App.Tower = function(game, x, y, type, enemyGroup) {
 App.Tower.prototype = Object.create(Phaser.Sprite.prototype);
 App.Tower.prototype.constructor = App.Tower;
 
+App.Tower.prototype.setBaseBuildingFrame = function() {
+    this.animations.frame = 5;
+};
+
 App.Tower.prototype.init = function() {
     this.soundAppears.play();
     this.animations.play('tower_creation', 6 / this.CONSTRUCTION_DURATION);
@@ -43,7 +47,7 @@ App.Tower.prototype.init = function() {
 
 App.Tower.prototype.update = function() {
     // do nothing, if not build yet
-    if (this.alpha == 0 || !this.build) {
+    if (this.alpha == 0.9 || !this.build) {
         return;
     }
 

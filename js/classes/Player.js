@@ -20,6 +20,7 @@ App.Player = function (game, x, y) {
     this.animations.add('build-n', this.range(30, 36)); //[30, 31, 32, 33, 34, 35, 30]);
     this.animations.add('build-s', this.range(48, 54)); //[48, 49, 50, 51, 52, 53, 48]);
     this.animations.add('build-e', this.range(66, 72)); //[66, 67, 68, 69, 70, 71, 66]);
+    this.currAnim = null;
 
     // strength of player vs enemy
     this.DAMAGE_TO_ENEMY = 10;
@@ -50,6 +51,7 @@ App.Player = function (game, x, y) {
     // The game is lost if that number goes under zero.
     this.health = 100;
     this.building = false;
+    this.attacking = false;
 };
 
 // Player is a type of Phaser.Sprite
@@ -58,11 +60,14 @@ App.Player.prototype.constructor = App.Player;
 
 App.Player.prototype.update = function () {
     this.followPath();
+    if (this.attacking && this.currAnim.isFinished) {
+        this.attacking = false;
+    }
 };
 
 App.Player.prototype.setBuildMode = function(target) {
     var dir = this.getCardinalDirection(this, target);
-    this.animations.play('build-' + dir, 12, true);
+    this.currAnim = this.animations.play('build-' + dir, 12, true);
     this.building = true;
 };
 
@@ -89,7 +94,7 @@ App.Player.prototype.tryHit = function (target) {
     if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
         if (this.game.physics.arcade.distanceBetween(this, target) < this.ATTACK_RANGE) {
             var dir = this.getCardinalDirection(this, target);
-            this.animations.play('attack-' + dir, 12);
+            this.currAnim = this.animations.play('attack-' + dir, 12);
             this.game.time.events.add(Phaser.Timer.SECOND * 0.25,
                 function() {target.hurt(this.DAMAGE_TO_ENEMY); }
                 , this
@@ -97,6 +102,7 @@ App.Player.prototype.tryHit = function (target) {
             this.stickAttackSound.play();
             this.lastAttack = this.game.time.now;
             this.body.velocity.setTo(0, 0);
+            this.attacking = true;
         }
     }
 };

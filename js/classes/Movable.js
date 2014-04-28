@@ -68,11 +68,10 @@ App.Movable.prototype.getCardinalDirection = function (source, dest) {
 
 App.Movable.prototype.moveToObject = function (dest) {
     this.game.physics.arcade.moveToObject(this, dest, this.SPEED);
-
     // this.game.debug.geom(new Phaser.Line(this.body.x, this.body.y, dest.x, dest.y));
 
     var dir = this.getCardinalDirection();
-    this.animations.play('walk-' + dir, 12, true);
+    this.currAnim = this.animations.play('walk-' + dir, 12, true);
 
     if (this.walkSound) {
         this.walkSound.resume();
@@ -80,16 +79,16 @@ App.Movable.prototype.moveToObject = function (dest) {
 };
 
 App.Movable.prototype.stopMoving = function () {
-    if (this.body.velocity.x === 0 && this.body.velocity.y === 0) {
-        return;
-    }
+    // if (this.body.velocity.x === 0 && this.body.velocity.y === 0) {
+    //     return;
+    // }
 
     this.body.velocity.setTo(0, 0);
     this.path.prev = null;
     this.path.next = null;
     this.path.pathStack = [];
 
-    if (!this.building) {
+    if (!this.building && !this.attacking) {
         this.animations.stop(null, true);
     }
 
