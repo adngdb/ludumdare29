@@ -30,6 +30,9 @@ App.Preloader.prototype = {
         this.load.spritesheet('buttonTower1', 'assets/interface/ui-btn-tower-1.png', 128, 128);
         this.load.spritesheet('buttonTower2', 'assets/interface/ui-btn-tower-2.png', 128, 128);
         this.load.spritesheet('buttonTower3', 'assets/interface/ui-btn-tower-3.png', 128, 128);
+        this.load.spritesheet('barre_vie', 'assets/interface/barre_vie.png', 289, 84);
+        this.load.spritesheet('jauge_vie', 'assets/interface/jauge_vie.png', 186, 33);
+        this.load.spritesheet('barre_hudingame', 'assets/interface/barre_hudingame.png', 434, 89);
 
         // audio for background soundtrack
         this.load.audio('theme_relax', 'assets/sfx/theme_main_relax.ogg');

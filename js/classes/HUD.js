@@ -9,18 +9,24 @@ App.HUD.prototype = {
         this.soundToggle = this.game.add.button(this.game.width - 50, 15, 'muteToggle', this.toggleSound, this);
         this.soundToggle.frame = 1;
 
-        this.chooseTower1Button = this.game.add.button(this.game.width / 2 - 180, this.game.height - 110, 'buttonTower1', this.chooseTower, this);
-        this.chooseTower1Button.scale.x = 0.75;
-        this.chooseTower1Button.scale.y = 0.75;
-        this.chooseTower1Button.type = 'tower1';
-        this.chooseTower2Button = this.game.add.button(this.chooseTower1Button.x + 128, this.chooseTower1Button.y, 'buttonTower2', this.chooseTower, this);
-        this.chooseTower2Button.scale.x = 0.75;
-        this.chooseTower2Button.scale.y = 0.75;
-        this.chooseTower2Button.type = 'tower2';
-        this.chooseTower3Button = this.game.add.button(this.chooseTower2Button.x + 128, this.chooseTower1Button.y, 'buttonTower3', this.chooseTower, this);
-        this.chooseTower3Button.scale.x = 0.75;
-        this.chooseTower3Button.scale.y = 0.75;
-        this.chooseTower3Button.type = 'tower3';
+        var buttonBar = this.game.add.sprite(this.game.world.centerX, this.game.height - 44, 'barre_hudingame');
+        buttonBar.anchor.set(0.5);
+
+        var chooseTower1Button = this.game.add.button(this.game.width / 2 - 80, buttonBar.y + 10, 'buttonTower1', this.chooseTower, this);
+        chooseTower1Button.anchor.set(0.5);
+        chooseTower1Button.scale.x = 0.5;
+        chooseTower1Button.scale.y = 0.5;
+        chooseTower1Button.type = 'tower1';
+        var chooseTower2Button = this.game.add.button(chooseTower1Button.x + 88, chooseTower1Button.y, 'buttonTower2', this.chooseTower, this);
+        chooseTower2Button.anchor.set(0.5);
+        chooseTower2Button.scale.x = 0.5;
+        chooseTower2Button.scale.y = 0.5;
+        chooseTower2Button.type = 'tower2';
+        var chooseTower3Button = this.game.add.button(chooseTower2Button.x + 88, chooseTower1Button.y, 'buttonTower3', this.chooseTower, this);
+        chooseTower3Button.anchor.set(0.5);
+        chooseTower3Button.scale.x = 0.5;
+        chooseTower3Button.scale.y = 0.5;
+        chooseTower3Button.type = 'tower3';
 
         var oneKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
         oneKey.onDown.add(this.shortcutChooseTower1, this);
@@ -31,13 +37,13 @@ App.HUD.prototype = {
 
         var style = { font: "16px custom", fill: "#794B23", align: "center" };
         var text1  = "1";
-        var towerShortcut = this.game.add.text(this.chooseTower1Button.x + 78, this.chooseTower1Button.y + 18, text1, style);
+        var towerShortcut = this.game.add.text(chooseTower1Button.x + 20, chooseTower1Button.y - 20, text1, style);
         towerShortcut.anchor.set(0.5);
         var text2  = "2";
-        var towerShortcut = this.game.add.text(this.chooseTower2Button.x + 78, this.chooseTower2Button.y + 18, text2, style);
+        var towerShortcut = this.game.add.text(chooseTower2Button.x + 20, chooseTower2Button.y - 20, text2, style);
         towerShortcut.anchor.set(0.5);
         var text3  = "3";
-        var towerShortcut = this.game.add.text(this.chooseTower3Button.x + 78, this.chooseTower3Button.y + 18, text3, style);
+        var towerShortcut = this.game.add.text(chooseTower3Button.x + 20, chooseTower3Button.y - 20, text3, style);
         towerShortcut.anchor.set(0.5);
     },
 
