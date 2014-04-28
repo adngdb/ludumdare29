@@ -222,7 +222,11 @@ App.Game.prototype = {
                 }
             }, null, this
         );
-        this.game.physics.arcade.collide(this.enemyGroup, this.towerGroup);
+        this.game.physics.arcade.collide(this.enemyGroup, this.towerGroup,
+            function (enemy, tower) {
+                enemy.target = tower;
+            }, null, this
+        );
         this.game.physics.arcade.collide(this.enemyGroup, this.enemyGroup);
 
         this.hud.update();

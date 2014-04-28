@@ -76,7 +76,7 @@ App.Player.prototype.setBuildMode = function(target) {
 App.Player.prototype.endBuildMode = function(target) {
     this.animations.stop(null, true);
     this.building = false;
-    target.build = true;
+    target.buildingComplete();
 };
 
 App.Player.prototype.activateConstructMode = function () {
