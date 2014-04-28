@@ -96,11 +96,11 @@ App.Game.prototype = {
         this.map = this.game.add.tilemap('access_map');
         this.map.setCollisionBetween(1, 2);
         this.access_layer = this.map.createLayer('access_map');
-        this.access_layer.debug = true;
+        // this.access_layer.debug = true;
 
         this.walkableTiles = [3];
         this.pathfinder = this.game.plugins.add(Phaser.Plugin.PathFinderPlugin);
-        this.pathfinder._easyStar.enableDiagonals();
+        // this.pathfinder._easyStar.enableDiagonals();
         this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
 
         this.TIME_BETWEEN_PATH_COMPUTATION = 1; // in seconds
