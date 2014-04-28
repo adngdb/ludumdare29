@@ -146,3 +146,9 @@ App.Movable.prototype.followPath = function () {
         this._preparePath();
     }
 };
+
+App.Movable.prototype.stopWalkSound = function () {
+    if (this.walkSound) {
+        this.walkSound.stop();
+    }
+};

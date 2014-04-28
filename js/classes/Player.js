@@ -113,7 +113,3 @@ App.Player.prototype.setChoosenTowerType = function (towerType) {
     this.towerTypeToConstruct = towerType;
     this.activateConstructMode();
 };
-
-App.Player.prototype.stopWalkSound = function () {
-    this.walkSound.stop();
-};

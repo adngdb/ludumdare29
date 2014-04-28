@@ -109,9 +109,7 @@ App.Game.prototype = {
     update: function() {
         // check Player : End Of Game : player dead
         if (this.player.health <= 0) {
-            this.player.stopWalkSound();
-            this.musicFight.stop();
-            this.musicRelax.stop();
+            this.stopSound();
             this.state.start('DeathMenu', true, false, this.score);
         }
         // check Enemy : dead ? newTarget ?
@@ -177,10 +175,8 @@ App.Game.prototype = {
                 }
 
                 if (this.numberWave > this.MAX_WAVE_NUMBER) {
-                    this.player.stopWalkSound();
                     // Max number of wave reached and ALL enemy killed => VICTORY !!!
-                    this.musicFight.stop();
-                    this.musicRelax.stop();
+                    this.stopSound();
                     this.state.start('VictoryMenu', true, false, this.score);
                 }
                 else {
@@ -442,5 +438,12 @@ App.Game.prototype = {
 
         this.pathfinder.preparePathCalculation([fromTile.x, fromTile.y], [toTile.x, toTile.y]);
         this.pathfinder.calculatePath();
+    },
+
+    stopSound: function() {
+        this.player.stopWalkSound();
+        this.enemyGroup.callAll('stopWalkSound');
+        this.musicFight.stop();
+        this.musicRelax.stop();
     }
 };

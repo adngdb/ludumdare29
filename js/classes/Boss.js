@@ -17,6 +17,11 @@ App.Boss = function(game, x, y, image, target) {
     this.animations.add('attack-n', this.range(18, 24));
     this.animations.add('attack-s', this.range(30, 36));
     this.animations.add('attack-w', this.range(42, 48));
+
+    this.walkSound = this.game.add.audio('boss_step');
+    this.walkSound.loop = true;
+    this.walkSound.volume = 0.4;
+    this.walkSound.play();
 };
 
 // Enemies are a type of Phaser.Sprite
