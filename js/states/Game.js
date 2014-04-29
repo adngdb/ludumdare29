@@ -320,22 +320,42 @@ App.Game.prototype = {
     },
 
     constructTower: function () {
-        // // Get the first dead tower from the towerGroup
-        var newTower = this.towerGroup.getFirstDead();
-
+        // // Get the first dead tower of the good type from the towerGroup
+        var newTower = null;
+        var index = this.towerGroup.length -1;
+        while (index >= 0){
+            var currTower = this.towerGroup.getAt(index);
+            if (!currTower.exists && currTower.key === this.player.towerTypeToConstruct) {
+                newTower = currTower;
+                break;
+            }
+            index--;
+        }
         // If there aren't any available, create a new one
         if (newTower === null) {
-            newTower = new App.Tower1(
-                this.game,
-                this.choosenTowerType.x,
-                this.choosenTowerType.y,
-                this.player.towerTypeToConstruct,
-                this.enemyGroup
-            );
+            if (this.player.towerTypeToConstruct == 'tower1') {
+                newTower = new App.Tower1(
+                    this.game,
+                    this.choosenTowerType.x,
+                    this.choosenTowerType.y,
+                    this.player.towerTypeToConstruct,
+                    this.enemyGroup
+                );
+            }
+            else {
+                newTower = new App.Tower2(
+                    this.game,
+                    this.choosenTowerType.x,
+                    this.choosenTowerType.y,
+                    this.player.towerTypeToConstruct,
+                    this.enemyGroup
+                );
+            }
             this.towerGroup.add(newTower);
         }
         else {
             // Revive it
+            newTower.reset();
             newTower.revive();
 
             // Move the tower to the given coordinates

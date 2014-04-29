@@ -39,6 +39,12 @@ App.Tower1 = function(game, x, y, type, enemyGroup) {
 App.Tower1.prototype = Object.create(Phaser.Sprite.prototype);
 App.Tower1.prototype.constructor = App.Tower1;
 
+App.Tower1.prototype.reset = function() {
+    this.health = 10;
+    this.build = false;
+    this.lastAttack = null;
+},
+
 App.Tower1.prototype.setBaseBuildingFrame = function() {
     this.animations.frame = 5;
 };

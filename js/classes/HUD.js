@@ -71,9 +71,7 @@ App.HUD.prototype = {
     },
 
     chooseTower: function(element) {
-        console.log("when implemented : change UI to build tower 2 and 3")
-        // this.player.setChoosenTowerType(element.type);
-        this.player.setChoosenTowerType('tower1');
+        this.player.setChoosenTowerType(element.type);
     },
 
     shortcutChooseTower1: function(key) {
@@ -85,7 +83,9 @@ App.HUD.prototype = {
     },
 
     shortcutChooseTower3: function(key) {
-        this.chooseTower({'type' : 'tower3'});
+        console.log("when implemented : change UI to build tower 3")
+        this.chooseTower({'type' : 'tower1'});
+        // this.chooseTower({'type' : 'tower3'});
     },
 
     updateLifeGauge: function() {

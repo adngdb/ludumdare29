@@ -9,14 +9,14 @@ App.Boss = function(game, x, y, image, target) {
 
     // walk animation
     this.animations.add('walk-e', this.range(0, 6));
-    this.animations.add('walk-n', this.range(12, 18));
-    this.animations.add('walk-s', this.range(24, 30));
-    this.animations.add('walk-w', this.range(36, 42));
+    this.animations.add('walk-w', this.range(12, 18));
+    this.animations.add('walk-n', this.range(24, 30));
+    this.animations.add('walk-s', this.range(36, 42));
     // attack animation
     this.animations.add('attack-e', this.range(6, 12));
-    this.animations.add('attack-n', this.range(18, 24));
-    this.animations.add('attack-s', this.range(30, 36));
-    this.animations.add('attack-w', this.range(42, 48));
+    this.animations.add('attack-w', this.range(18, 24));
+    this.animations.add('attack-n', this.range(30, 36));
+    this.animations.add('attack-s', this.range(42, 48));
     // spawn animation
     this.animations.add('spawn', this.range(48, 54));
 

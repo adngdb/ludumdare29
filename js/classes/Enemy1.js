@@ -47,6 +47,8 @@ App.Enemy1 = function(game, x, y, image, target) {
     this.lastPathComputation = null;
     this.attacking = false;
     this.currAnim = null;
+    this.speedModif = 1;
+    this.speedModifTimer = null;
 
     this.spawn = false;
 };
@@ -63,6 +65,8 @@ App.Enemy1.prototype.init = function() {
     this.spawn = false;
     this.currAnim = this.animations.play('spawn', 12);
     this.target = this.savePlayer;
+    this.speedModif = 1;
+    this.speedModifTimer = null;
 };
 
 App.Enemy1.prototype.update = function() {
@@ -75,10 +79,18 @@ App.Enemy1.prototype.update = function() {
     if (!this.spawn) {
         if (this.currAnim.isFinished) {
             this.spawn = true;
-        this.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))
+            this.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))
         }
         else{
             return;
+        }
+    }
+
+    if (this.speedModifTimer !== null) {
+        if (this.game.time.elapsedSecondsSince(this.speedModifTimer) > 2) {
+            // last freeze more than 2sec before => unfreeze
+            this.speedModif = 1;
+            this.lastPathComputation = null;
         }
     }
 
@@ -111,9 +123,10 @@ App.Enemy1.prototype.update = function() {
                 this.target.hurt(this.DAMAGES_TO_TOWER);
             }
             this.lastAttack = this.game.time.now;
-            if (this.target.health <= 0) {
-                this.target = this.savePlayer;
-            }
+        }
+        // reset target if killed (by this enemy or another one)
+        if (this.target.health <= 0) {
+            this.target = this.savePlayer;
         }
     }
 

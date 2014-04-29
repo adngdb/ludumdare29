@@ -4,6 +4,7 @@ App.Movable = function (game, x, y, sprite) {
     this.game = game;
 
     this.SPEED = 60; // in pixels per second
+    this.speedModif = 1;
 
     // Enable physics on the movable.
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
@@ -74,7 +75,7 @@ App.Movable.prototype.getCardinalDirection = function (source, dest) {
 };
 
 App.Movable.prototype.moveToObject = function (dest) {
-    this.game.physics.arcade.moveToObject(this, dest, this.SPEED);
+    this.game.physics.arcade.moveToObject(this, dest, this.SPEED * this.speedModif);
     // this.game.debug.geom(new Phaser.Line(this.body.x, this.body.y, dest.x, dest.y));
 
     var dir = this.getCardinalDirection();

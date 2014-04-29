@@ -48,6 +48,8 @@ App.Enemy2 = function(game, x, y, image, target, towers) {
     this.lastPathComputation = null;
     this.attacking = false;
     this.currAnim = null;
+    this.speedModif = 1;
+    this.speedModifTimer = null;
 
     this.spawn = false;
 };
@@ -64,6 +66,8 @@ App.Enemy2.prototype.init = function() {
     this.spawn = false;
     this.currAnim = this.animations.play('spawn', 12);
     this.getNewTarget();
+    this.speedModif = 1;
+    this.speedModifTimer = null;
 };
 
 App.Enemy2.prototype.update = function() {
@@ -82,6 +86,13 @@ App.Enemy2.prototype.update = function() {
         }
     }
 
+    if (this.speedModifTimer !== null) {
+        if (this.game.time.elapsedSecondsSince(this.speedModifTimer) > 2) {
+            // last freeze more than 2sec before => unfreeze
+            this.speedModif = 1;
+            this.lastPathComputation = null;
+        }
+    }
     if (this.attacking && this.currAnim && this.currAnim.isFinished) {
         this.attacking = false;
     }
