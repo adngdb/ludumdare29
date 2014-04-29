@@ -31,5 +31,5 @@ App.Boss = function(game, x, y, image, target) {
 };
 
 // Enemies are a type of Phaser.Sprite
-App.Boss.prototype = Object.create(App.Enemy.prototype);
+App.Boss.prototype = Object.create(App.Enemy1.prototype);
 App.Boss.prototype.constructor = App.Boss;

@@ -154,9 +154,11 @@ App.Game.prototype = {
                         !currEnemy.lastPathComputation ||
                         this.game.time.elapsedSecondsSince(currEnemy.lastPathComputation) > this.TIME_BETWEEN_PATH_COMPUTATION
                     ) {
-                        var targetTile = this.map.getTileWorldXY(this.player.x, this.player.y);
+                        if (currEnemy.key == 'enemy2') {
+                            currEnemy.getNewTarget();
+                        }
+                        var targetTile = this.map.getTileWorldXY(currEnemy.target.x, currEnemy.target.y);
                         this.computePath(currEnemy, targetTile);
-
                         currEnemy.lastPathComputation = this.game.time.now;
                     }
                 }
@@ -422,14 +424,33 @@ App.Game.prototype = {
         var newX = this.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);
         var newY = this.centerY + (this.RadiusY + 50) * Math.sin(param * 2 * Math.PI);
 
-        var newEnemy = this.enemyGroup.getFirstDead();
+        var enemyRand = Math.random();
+        var enemyType = enemyRand < 0.5 ? 'enemy1' : 'enemy2';
+        var newEnemy = null;
+        var index = this.enemyGroup.length -1;
+        while (index >= 0){
+            var currEnemy = this.enemyGroup.getAt(index);
+            if (!currEnemy.exists && currEnemy.key === enemyType) {
+                newEnemy = currEnemy;
+                break;
+            }
+            index--;
+        }
         if (createBoss) {
             newEnemy = new App.Boss(this.game, newX, newY, 'boss', this.player);
             this.enemyGroup.add(newEnemy);
         }
 
         if (newEnemy === null) {
-            newEnemy = new App.Enemy(this.game, newX, newY, 'enemy1', this.player);
+            if (enemyType == 'enemy1') {
+                newEnemy = new App.Enemy1(this.game, newX, newY, enemyType, this.player, this.towerGroup);
+            }
+            else if (enemyType == 'enemy2') {
+                newEnemy = new App.Enemy2(this.game, newX, newY, enemyType, this.player, this.towerGroup);
+            }
+            else {
+                console.log("SHOULD NEVER HAPPEN");
+            }
             this.enemyGroup.add(newEnemy);
         }
         else {

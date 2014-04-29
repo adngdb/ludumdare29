@@ -1,10 +1,11 @@
-App.Enemy = function(game, x, y, image, target) {
+App.Enemy1 = function(game, x, y, image, target) {
     App.Movable.call(this, game, x, y, image);
 
     this.game = game;
     this.target = target;
     this.savePlayer = this.target;
 
+    // carac for enemy 1
     this.SPEED = 60; // in pixels per second
     this.REACH_DISTANCE = 70; // in pixels
     this.DAMAGES_TO_PLAYER = 10; // in health points
@@ -51,10 +52,10 @@ App.Enemy = function(game, x, y, image, target) {
 };
 
 // Enemies are a type of Phaser.Sprite
-App.Enemy.prototype = Object.create(App.Movable.prototype);
-App.Enemy.prototype.constructor = App.Enemy;
+App.Enemy1.prototype = Object.create(App.Movable.prototype);
+App.Enemy1.prototype.constructor = App.Enemy1;
 
-App.Enemy.prototype.init = function() {
+App.Enemy1.prototype.init = function() {
     this.soundAppears.play();
     this.lastAttack = null;
     this.health = this.MAX_HEALTH;
@@ -64,7 +65,7 @@ App.Enemy.prototype.init = function() {
     this.target = this.savePlayer;
 };
 
-App.Enemy.prototype.update = function() {
+App.Enemy1.prototype.update = function() {
     // This enemy moves towards the player constantly. It won't try to
     // attack towers.
 
@@ -74,9 +75,9 @@ App.Enemy.prototype.update = function() {
     if (!this.spawn) {
         if (this.currAnim.isFinished) {
             this.spawn = true;
-            this.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY));
+        this.moveToObject(new Phaser.Point(this.game.world.centerX, this.game.world.centerY))
         }
-        else {
+        else{
             return;
         }
     }
@@ -119,10 +120,10 @@ App.Enemy.prototype.update = function() {
     this.followPath();
 };
 
-App.Enemy.prototype.clickListener = function (element, pointer) {
+App.Enemy1.prototype.clickListener = function (element, pointer) {
     this.isTargeted = true;
 };
 
-App.Enemy.prototype.hurt = function (damages) {
+App.Enemy1.prototype.hurt = function (damages) {
     this.health -= damages;
 };

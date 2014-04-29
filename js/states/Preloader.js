@@ -19,6 +19,7 @@ App.Preloader.prototype = {
         this.load.spritesheet('player', 'assets/gfx/player.png', this.PLAYER_SIZE, this.PLAYER_SIZE);
         this.load.spritesheet('tower1', 'assets/gfx/tower1.png', this.TOWER_SIZE, this.TOWER_SIZE);
         this.load.spritesheet('enemy1', 'assets/gfx/enemy1.png', this.ENEMY_SIZE, this.ENEMY_SIZE);
+        this.load.spritesheet('enemy2', 'assets/gfx/enemy2.png', this.ENEMY_SIZE, this.ENEMY_SIZE);
         this.load.spritesheet('boss', 'assets/gfx/boss.png', this.BOSS_SIZE, this.BOSS_SIZE);
 
         this.load.image('background', 'assets/gfx/background.png');
@@ -46,6 +47,9 @@ App.Preloader.prototype = {
         this.load.audio('enemy_pig_appears', 'assets/sfx/enemy_pig_appears.ogg');
         this.load.audio('enemy_pig_attack', 'assets/sfx/enemy_pig_attack.ogg');
         this.load.audio('enemy_pig_dies', 'assets/sfx/enemy_pig_dies.ogg');
+        // audio for "eye" enemy
+        this.load.audio('enemy_eye_attack', 'assets/sfx/enemy_ball_attack.ogg');
+        this.load.audio('enemy_eye_move', 'assets/sfx/enemy_ball_rebound.ogg');
         // audio for tower 1
         this.load.audio('tower1_appears', 'assets/sfx/tower1_appears.ogg');
         this.load.audio('tower1_bites', 'assets/sfx/tower1_bites.ogg');
