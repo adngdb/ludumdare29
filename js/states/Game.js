@@ -325,7 +325,7 @@ App.Game.prototype = {
 
         // If there aren't any available, create a new one
         if (newTower === null) {
-            newTower = new App.Tower(
+            newTower = new App.Tower1(
                 this.game,
                 this.choosenTowerType.x,
                 this.choosenTowerType.y,

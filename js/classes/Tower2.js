@@ -1,5 +1,5 @@
-App.Tower = function(game, x, y, type, enemyGroup) {
-    Phaser.Sprite.call(this, game, x, y, 'tower1');
+App.Tower2 = function(game, x, y, type, enemyGroup) {
+    Phaser.Sprite.call(this, game, x, y, 'tower2');
 
     this.game = game;
     this.enemyGroup = enemyGroup;
@@ -36,24 +36,24 @@ App.Tower = function(game, x, y, type, enemyGroup) {
 };
 
 // Tower are a type of Phaser.Sprite
-App.Tower.prototype = Object.create(Phaser.Sprite.prototype);
-App.Tower.prototype.constructor = App.Tower;
+App.Tower2.prototype = Object.create(Phaser.Sprite.prototype);
+App.Tower2.prototype.constructor = App.Tower2;
 
-App.Tower.prototype.setBaseBuildingFrame = function() {
+App.Tower2.prototype.setBaseBuildingFrame = function() {
     this.animations.frame = 5;
 };
 
-App.Tower.prototype.buildingComplete = function() {
+App.Tower2.prototype.buildingComplete = function() {
     this.build = true;
     this.health += this.MAX_HEALTH - 10;
 };
 
-App.Tower.prototype.init = function() {
+App.Tower2.prototype.init = function() {
     this.soundAppears.play();
     this.animations.play('tower_creation', 6 / this.CONSTRUCTION_DURATION);
 };
 
-App.Tower.prototype.update = function() {
+App.Tower2.prototype.update = function() {
     // do nothing, if not build yet
     if (this.alpha == 0.9 || !this.build || !this.exists) {
         return;
@@ -85,7 +85,7 @@ App.Tower.prototype.update = function() {
     }
 }
 
-App.Tower.prototype.hurt = function (damages) {
+App.Tower2.prototype.hurt = function (damages) {
     this.health -= damages;
 };
 
