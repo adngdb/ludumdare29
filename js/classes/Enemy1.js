@@ -1,5 +1,5 @@
-App.Enemy1 = function(game, x, y, image, target) {
-    App.Enemy.call(this, game, x, y, image);
+App.Enemy1 = function(game, x, y, target) {
+    App.Enemy.call(this, game, x, y, 'enemy1');
 
     this.target = target;
     this.savePlayer = this.target;

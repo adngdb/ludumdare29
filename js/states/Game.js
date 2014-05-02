@@ -466,10 +466,10 @@ App.Game.prototype = {
 
         if (newEnemy === null) {
             if (enemyType == 'enemy1') {
-                newEnemy = new App.Enemy1(this.game, newX, newY, enemyType, this.player, this.towerGroup);
+                newEnemy = new App.Enemy1(this.game, newX, newY, this.player, this.towerGroup);
             }
             else if (enemyType == 'enemy2') {
-                newEnemy = new App.Enemy2(this.game, newX, newY, enemyType, this.player, this.towerGroup);
+                newEnemy = new App.Enemy2(this.game, newX, newY, this.player, this.towerGroup);
             }
             else {
                 console.log("SHOULD NEVER HAPPEN");
