@@ -363,6 +363,9 @@ App.Game.prototype = {
             newTower.y = this.choosenTowerType.y;
         }
 
+        // Sort the Tower group by `y` so they get displayed correctly.
+        this.towerGroup.sort('y', Phaser.Group.SORT_ASCENDING);
+
         // Add the tower to the collision map.
         var tile = this.map.getTileWorldXY(this.choosenTowerType.x, this.choosenTowerType.y);
         var surroundingTiles = [
