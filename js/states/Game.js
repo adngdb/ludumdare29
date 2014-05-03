@@ -303,6 +303,7 @@ App.Game.prototype = {
     clickListener: function (element, pointer) {
         if (Phaser.Mouse.RIGHT_BUTTON == this.input.mouse.button) {
             this.cancelConstruction();
+            return false;
         }
 
         if (this.gameEnded) {
