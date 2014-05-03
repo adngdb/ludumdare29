@@ -1,5 +1,5 @@
-App.Tower1 = function(game, x, y, type, enemyGroup) {
-    App.Tower.call(this, game, x, y, 'tower1', type, enemyGroup);
+App.Tower1 = function(game, x, y, enemiesList) {
+    App.Tower.call(this, game, x, y, 'tower1', enemiesList);
 
     this.REACH_DISTANCE = 80; // in pixels
     this.DAMAGES_TO_ENEMY = 10; // in health points
@@ -29,19 +29,19 @@ App.Tower1.prototype.update = function() {
 
     // Attack the first enemy in range if the cooldown time has passed.
     if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
-        var target = this.enemyGroup.getAt(0);
+        var target = this.enemiesList[0];
         var next = false;
         var index = 0;
-        while(target != -1 && !next) {
+        while (target && !next) {
             if (target.exists && this.game.physics.arcade.distanceBetween(this, target) < this.REACH_DISTANCE) {
                 next = true;
             }
             else {
-                target = this.enemyGroup.getAt(++index);
+                target = this.enemiesList[++index];
             }
         }
 
-        if (target != -1) {
+        if (target) {
             this.game.time.events.add(Phaser.Timer.SECOND * 0.25,
                 function() {target.hurt(this.DAMAGES_TO_ENEMY);}
                 , this

@@ -1,5 +1,5 @@
-App.Tower2 = function(game, x, y, type, enemyGroup) {
-    App.Tower.call(this, game, x, y, 'tower2', type, enemyGroup);
+App.Tower2 = function(game, x, y, enemiesList) {
+    App.Tower.call(this, game, x, y, 'tower2', enemiesList);
 
     this.REACH_DISTANCE = 150; // in pixels
     this.DAMAGES_TO_ENEMY = 5; // in health points
@@ -31,8 +31,8 @@ App.Tower2.prototype.update = function() {
     // slow all enemy in range if the cooldown time has passed.
     if (!this.lastAttack || this.game.time.elapsedSecondsSince(this.lastAttack) > this.ATTACK_COOLDOWN) {
         var attacked = false;
-        for (var index = this.enemyGroup.length - 1; index>=0; index--) {
-            var currEnemy = this.enemyGroup.getAt(index);
+        for (var index = this.enemiesList.length - 1; index>=0; index--) {
+            var currEnemy = this.enemiesList[index];
             if (currEnemy.exists && this.game.physics.arcade.distanceBetween(this, currEnemy) < this.REACH_DISTANCE) {
                 if (currEnemy.speedModif != this.SLOW_VALUE) {
                     currEnemy.speedModif = this.SLOW_VALUE;

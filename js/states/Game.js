@@ -21,8 +21,6 @@ App.Game = function(game) {
 
     this.player;
     this.hud;
-    this.towerGroup;
-    this.enemyGroup;
 
     this.choosenTowerType = null;
     this.towerHeight = 32;
@@ -48,8 +46,8 @@ App.Game = function(game) {
 App.Game.prototype = {
 
     preload: function() {
-        this.player = new App.Player(this.game, this.game.world.width / 2, this.game.world.height / 2);
-        this.hud    = new App.HUD(this.game, this.player);
+        this.player = new App.Player(this.game, this.world.centerX, this.world.centerY);
+        this.hud = new App.HUD(this.game, this.player);
     },
 
     create: function() {
@@ -66,16 +64,16 @@ App.Game.prototype = {
         var cancelConstruction = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
         cancelConstruction.onDown.add(this.cancelConstruction, this);
 
-        this.game.add.existing(this.player);
+        this.allObjectsGroup = this.game.add.group();
+        this.allObjectsGroup.enableBody = true;
+        this.allObjectsGroup.physicsBodyType = Phaser.Physics.ARCADE;
+
+        this.allObjectsGroup.add(this.player);
+
         this.hud.create();
 
-        this.towerGroup = this.game.add.group();
-        this.towerGroup.enableBody = true;
-        this.towerGroup.physicsBodyType = Phaser.Physics.ARCADE;
-
-        this.enemyGroup = this.game.add.group();
-        this.enemyGroup.enableBody = true;
-        this.enemyGroup.physicsBodyType = Phaser.Physics.ARCADE;
+        this.towersList = new App.Collection();
+        this.enemiesList = new App.Collection();
 
         this.musicFight = this.game.add.audio('theme_fight');
         this.musicFight.loop = true;
@@ -119,8 +117,7 @@ App.Game.prototype = {
             this.gameEnded = true;
 
             // Stop all movements.
-            this.player.stopMoving();
-            this.enemyGroup.callAll('stopMoving');
+            this.stopAllMovements();
 
             var deathTimer = this.game.time.create();
             deathTimer.add(1000, function () {
@@ -132,9 +129,9 @@ App.Game.prototype = {
         }
 
         // check Enemy : dead ? newTarget ?
-        for (var i = this.enemyGroup.length-1; i>=0; i--)
+        for (var i = this.enemiesList.length - 1; i>=0; i--)
         {
-            var currEnemy = this.enemyGroup.getAt(i);
+            var currEnemy = this.enemiesList[i];
             if (currEnemy.exists) {
                 // is the enemy dead ?
                 if (currEnemy.health <= 0) {
@@ -165,8 +162,8 @@ App.Game.prototype = {
             }
         }
 
-        for (var i = this.towerGroup.length - 1; i >= 0; i--) {
-            var tower = this.towerGroup.getAt(i);
+        for (var i = this.towersList.length - 1; i >= 0; i--) {
+            var tower = this.towersList[i];
 
             if (tower.exists && tower.health <= 0) {
                 this.destructTower(tower);
@@ -176,13 +173,13 @@ App.Game.prototype = {
         // check Wave : End of game ? new one ?
         if (!this.creatingWave) {
             // compute : are there any enemy alive ?
-            var index = this.enemyGroup.length-1;
-            var enemy = this.enemyGroup.getAt(index);
+            var index = this.enemiesList.length - 1;
+            var enemy = this.enemiesList[index];
             var win = true;
             while (win && index >= 0) {
                 win = !enemy.exists;
                 index--;
-                enemy = this.enemyGroup.getAt(index);
+                enemy = this.enemiesList[index];
             }
             if (win) {
                 // if all enemy are dead
@@ -207,8 +204,7 @@ App.Game.prototype = {
                     this.gameEnded = true;
 
                     // Stop all movements.
-                    this.player.stopMoving();
-                    this.enemyGroup.callAll('stopMoving');
+                    this.stopAllMovements();
 
                     // this.player.animations.play('victory');
                     var victoryTimer = this.game.time.create();
@@ -249,8 +245,8 @@ App.Game.prototype = {
 
         // moving the player & collision
         this.game.physics.arcade.collide(this.player, this.access_layer);
-        this.game.physics.arcade.collide(this.player, this.enemyGroup);
-        this.game.physics.arcade.collide(this.player, this.towerGroup,
+        this.game.physics.arcade.collide(this.player, this.enemiesList);
+        this.game.physics.arcade.collide(this.player, this.towersList,
             function (player, tower) {
                 if (tower.alpha == 0.9) {
                     tower.build = false;
@@ -262,12 +258,12 @@ App.Game.prototype = {
                 }
             }, null, this
         );
-        this.game.physics.arcade.collide(this.enemyGroup, this.towerGroup,
+        this.game.physics.arcade.collide(this.enemiesList, this.towersList,
             function (enemy, tower) {
                 enemy.target = tower;
             }, null, this
         );
-        this.game.physics.arcade.collide(this.enemyGroup, this.enemyGroup);
+        this.game.physics.arcade.collide(this.enemiesList, this.enemiesList);
 
         this.hud.update();
 
@@ -290,6 +286,9 @@ App.Game.prototype = {
                 this.choosenTowerType = null;
             }
         }
+
+        // Sort all objects by `y` so they get displayed correctly.
+        this.allObjectsGroup.sort('y', Phaser.Group.SORT_ASCENDING);
     },
 
     render: function() {
@@ -321,17 +320,18 @@ App.Game.prototype = {
     },
 
     constructTower: function () {
-        // // Get the first dead tower of the good type from the towerGroup
+        // // Get the first dead tower of the good type from the towersList
         var newTower = null;
-        var index = this.towerGroup.length -1;
-        while (index >= 0){
-            var currTower = this.towerGroup.getAt(index);
+        var index = this.towersList.length - 1;
+        while (index >= 0) {
+            var currTower = this.towersList[index];
             if (!currTower.exists && currTower.key === this.player.towerTypeToConstruct) {
                 newTower = currTower;
                 break;
             }
             index--;
         }
+
         // If there aren't any available, create a new one
         if (newTower === null) {
             if (this.player.towerTypeToConstruct == 'tower1') {
@@ -339,8 +339,7 @@ App.Game.prototype = {
                     this.game,
                     this.choosenTowerType.x,
                     this.choosenTowerType.y,
-                    this.player.towerTypeToConstruct,
-                    this.enemyGroup
+                    this.enemiesList
                 );
             }
             else {
@@ -348,11 +347,11 @@ App.Game.prototype = {
                     this.game,
                     this.choosenTowerType.x,
                     this.choosenTowerType.y,
-                    this.player.towerTypeToConstruct,
-                    this.enemyGroup
+                    this.enemiesList
                 );
             }
-            this.towerGroup.add(newTower);
+            this.allObjectsGroup.add(newTower);
+            this.towersList.push(newTower);
         }
         else {
             // Revive it
@@ -363,9 +362,6 @@ App.Game.prototype = {
             newTower.x = this.choosenTowerType.x;
             newTower.y = this.choosenTowerType.y;
         }
-
-        // Sort the Tower group by `y` so they get displayed correctly.
-        this.towerGroup.sort('y', Phaser.Group.SORT_ASCENDING);
 
         // Add the tower to the collision map.
         var tile = this.map.getTileWorldXY(this.choosenTowerType.x, this.choosenTowerType.y);
@@ -451,9 +447,9 @@ App.Game.prototype = {
         var enemyRand = Math.random();
         var enemyType = enemyRand < 0.5 ? 'enemy1' : 'enemy2';
         var newEnemy = null;
-        var index = this.enemyGroup.length -1;
-        while (index >= 0){
-            var currEnemy = this.enemyGroup.getAt(index);
+        var index = this.enemiesList.length -1;
+        while (index >= 0) {
+            var currEnemy = this.enemiesList[index];
             if (!currEnemy.exists && currEnemy.key === enemyType) {
                 newEnemy = currEnemy;
                 break;
@@ -462,20 +458,22 @@ App.Game.prototype = {
         }
         if (createBoss) {
             newEnemy = new App.Boss(this.game, newX, newY, 'boss', this.player);
-            this.enemyGroup.add(newEnemy);
+            this.allObjectsGroup.add(newEnemy);
+            this.enemiesList.push(newEnemy);
         }
 
         if (newEnemy === null) {
             if (enemyType == 'enemy1') {
-                newEnemy = new App.Enemy1(this.game, newX, newY, this.player, this.towerGroup);
+                newEnemy = new App.Enemy1(this.game, newX, newY, this.player);
             }
             else if (enemyType == 'enemy2') {
-                newEnemy = new App.Enemy2(this.game, newX, newY, this.player, this.towerGroup);
+                newEnemy = new App.Enemy2(this.game, newX, newY, this.player, this.towersList);
             }
             else {
                 console.log("SHOULD NEVER HAPPEN");
             }
-            this.enemyGroup.add(newEnemy);
+            this.allObjectsGroup.add(newEnemy);
+            this.enemiesList.push(newEnemy);
         }
         else {
             newEnemy.x = newX;
@@ -554,10 +552,19 @@ App.Game.prototype = {
         this.pathfinder.calculatePath();
     },
 
-    stopSound: function() {
+    stopSound: function () {
         this.player.stopWalkSound();
-        this.enemyGroup.callAll('stopWalkSound');
+        for (var i = this.enemiesList.length - 1; i >= 0; i--) {
+            this.enemiesList[i].stopWalkSound();
+        }
         this.musicFight.stop();
         this.musicRelax.stop();
+    },
+
+    stopAllMovements: function () {
+        this.player.stopMoving();
+        for (var i = this.enemiesList.length - 1; i >= 0; i--) {
+            this.enemiesList[i].stopMoving();
+        }
     }
 };

@@ -1,9 +1,8 @@
-App.Tower = function(game, x, y, image, type, enemyGroup) {
+App.Tower = function(game, x, y, image, enemiesList) {
     Phaser.Sprite.call(this, game, x, y, image);
 
     this.game = game;
-    this.enemyGroup = enemyGroup;
-    this.type = type;
+    this.enemiesList = enemiesList;
 
     this.REACH_DISTANCE = 80; // in pixels
     this.DAMAGES_TO_ENEMY = 10; // in health points
