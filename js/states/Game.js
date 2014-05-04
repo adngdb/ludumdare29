@@ -264,12 +264,20 @@ App.Game.prototype = {
                 }
             }, null, this
         );
-        this.game.physics.arcade.collide(this.enemiesList, this.towersList,
-            function (enemy, tower) {
-                enemy.target = tower;
-            }, null, this
-        );
-        this.game.physics.arcade.collide(this.enemiesList, this.enemiesList);
+        for (var i = this.enemiesList.length - 1; i >= 0; i--) {
+            var enemy = this.enemiesList[i];
+
+            if (!enemy.exists) {
+                continue;
+            }
+
+            this.game.physics.arcade.collide(enemy, this.towersList,
+                function (enemy, tower) {
+                    enemy.target = tower;
+                }, null, this
+            );
+            this.game.physics.arcade.collide(enemy, this.enemiesList);
+        };
 
         // Tower creation
         if (this.player.isInConstructMode) {
