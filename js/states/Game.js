@@ -249,7 +249,7 @@ App.Game.prototype = {
             }
         }
 
-        // moving the player & collision
+        // Collisions
         this.game.physics.arcade.collide(this.player, this.access_layer);
         this.game.physics.arcade.collide(this.player, this.enemiesList);
         this.game.physics.arcade.collide(this.player, this.towersList,
@@ -271,33 +271,25 @@ App.Game.prototype = {
         );
         this.game.physics.arcade.collide(this.enemiesList, this.enemiesList);
 
-        this.hud.update();
-
-        // tower creation
-
+        // Tower creation
         if (this.player.isInConstructMode) {
             // is the player in construction mode ?
             if (this.towerToConstruct === null) {
+                var towerType = null;
                 if (this.player.towerTypeToConstruct === 'tower1') {
-                    this.towerToConstruct = new App.Tower1(
-                        this.game,
-                        this.input.x,
-                        this.input.y,
-                        [],
-                        this.map
-                    );
+                    towerType = App.Tower1;
                 }
                 else if (this.player.towerTypeToConstruct === 'tower2') {
-                    this.towerToConstruct = new App.Tower2(
-                        this.game,
-                        this.input.x,
-                        this.input.y,
-                        [],
-                        this.map
-                    );
+                    towerType = App.Tower2;
                 }
-                // this.towerToConstruct = this.game.add.sprite(this.input.x, this.input.y, this.player.towerTypeToConstruct);
-                // this.towerToConstruct.anchor.setTo(0.5, 3.0 / 4.0);
+                this.towerToConstruct = new towerType(
+                    this.game,
+                    this.input.x,
+                    this.input.y,
+                    [],
+                    this.map
+                );
+
                 this.towerToConstruct.alpha = 0.5;
                 this.allObjectsGroup.add(this.towerToConstruct);
             }
@@ -336,6 +328,8 @@ App.Game.prototype = {
 
         // Sort all objects by `y` so they get displayed correctly.
         this.allObjectsGroup.sort('y', Phaser.Group.SORT_ASCENDING);
+
+        this.hud.update();
     },
 
     render: function() {
@@ -383,24 +377,22 @@ App.Game.prototype = {
 
         // If there aren't any available, create a new one
         if (newTower === null) {
-            if (this.player.towerTypeToConstruct == 'tower1') {
-                newTower = new App.Tower1(
-                    this.game,
-                    this.towerToConstruct.x,
-                    this.towerToConstruct.y,
-                    this.enemiesList,
-                    this.map
-                );
+            var towerType = null;
+            if (this.player.towerTypeToConstruct === 'tower1') {
+                towerType = App.Tower1;
             }
-            else {
-                newTower = new App.Tower2(
-                    this.game,
-                    this.towerToConstruct.x,
-                    this.towerToConstruct.y,
-                    this.enemiesList,
-                    this.map
-                );
+            else if (this.player.towerTypeToConstruct === 'tower2') {
+                towerType = App.Tower2;
             }
+
+            newTower = new towerType(
+                this.game,
+                this.towerToConstruct.x,
+                this.towerToConstruct.y,
+                this.enemiesList,
+                this.map
+            );
+
             this.allObjectsGroup.add(newTower);
             this.towersList.push(newTower);
         }
