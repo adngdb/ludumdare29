@@ -1,4 +1,4 @@
-App.HUD = function(game, player) {
+App.HUD = function (game, player) {
 
     this.game = game;
     this.player = player;
@@ -7,7 +7,7 @@ App.HUD = function(game, player) {
 };
 
 App.HUD.prototype = {
-    create: function() {
+    create: function () {
         this.soundToggle = this.game.add.button(this.game.width - 74, 0, 'muteToggle', this.toggleSound, this);
         this.soundToggle.scale.set(0.5, 0.5);
         if (this.game.sound.mute) {
@@ -59,40 +59,45 @@ App.HUD.prototype = {
         towerShortcut.anchor.set(0.5);
     },
 
-    update: function() {
+    update: function () {
         this.updateLifeGauge();
     },
 
-    render: function() {
+    render: function () {
     },
 
-    toggleSound: function()
+    toggleSound: function ()
     {
         this.game.sound.mute = !this.game.sound.mute;
         this.soundMuted = !this.soundMuted;
         this.soundToggle.frame = 1 - this.soundToggle.frame;
     },
 
-    chooseTower: function(element) {
-        this.player.setChosenTowerType(element.type);
+    chooseTower: function (towerType) {
+        this.player.setChosenTowerType(towerType);
     },
 
-    shortcutChooseTower1: function(key) {
-        this.chooseTower({'type' : 'tower1'});
+    shortcutChooseTower1: function (key) {
+        this.chooseTower('tower1');
     },
 
-    shortcutChooseTower2: function(key) {
-        this.chooseTower({'type' : 'tower2'});
+    shortcutChooseTower2: function (key) {
+        this.chooseTower('tower2');
     },
 
-    shortcutChooseTower3: function(key) {
+    shortcutChooseTower3: function (key) {
         console.log("when implemented : change UI to build tower 3")
-        this.chooseTower({'type' : 'tower1'});
-        // this.chooseTower({'type' : 'tower3'});
+        this.chooseTower('tower1');
+        // this.chooseTower('tower3');
     },
 
-    updateLifeGauge: function() {
+    updateLifeGauge: function () {
         var croppedWidth = (this.player.health / this.player.maxHealth) * this.lifeGaugeMaxSize;
-        this.lifeGauge.crop({x : 0, y : 0 , width : croppedWidth, height : this.lifeGauge.height});
+        this.lifeGauge.crop({
+            x: 0,
+            y: 0,
+            width: croppedWidth,
+            height: this.lifeGauge.height
+        });
     }
 };
