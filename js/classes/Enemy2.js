@@ -13,6 +13,12 @@ App.Enemy2 = function(game, x, y, target, towers) {
     this.ATTACK_COOLDOWN = 3; // in seconds
     this.MAX_HEALTH = 40;
 
+    // Those animations are different than the default.
+    this.animations.add('walk-n', this.range(36, 42));
+    this.animations.add('walk-s', this.range(24, 30));
+    this.animations.add('attack-n', [42, 43, 44, 45, 46, 47, 42]);
+    this.animations.add('attack-s', [30, 31, 32, 33, 34, 35, 30]);
+
     // This enemy's event sounds.
     this.soundAppears = this.game.add.audio('enemy_pig_appears');
     this.soundAppears.volume = 0.5;
