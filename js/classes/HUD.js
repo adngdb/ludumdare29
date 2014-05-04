@@ -10,6 +10,9 @@ App.HUD.prototype = {
     create: function() {
         this.soundToggle = this.game.add.button(this.game.width - 74, 0, 'muteToggle', this.toggleSound, this);
         this.soundToggle.scale.set(0.5, 0.5);
+        if (this.game.sound.mute) {
+            this.soundToggle.frame = 1;
+        }
 
         var buttonBar = this.game.add.sprite(this.game.world.centerX, this.game.height - 44, 'barre_hudingame');
         buttonBar.anchor.set(0.5);

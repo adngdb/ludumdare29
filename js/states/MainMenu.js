@@ -6,6 +6,9 @@ App.MainMenu.prototype = {
     create: function() {
         this.titleMenu = this.game.add.sprite(0, 0, 'title_menu');
 
+        this.soundToggle = this.game.add.button(this.game.width - 74, 0, 'muteToggle', this.toggleSound, this);
+        this.soundToggle.scale.set(0.5, 0.5);
+
         // create a new bitmap data object
         var bitmapButton = this.game.add.bitmapData(300,64);
 
@@ -30,6 +33,11 @@ App.MainMenu.prototype = {
         this.menuSound.stop();
         this.menuSound.volume = 0;
         this.game.state.start('Game');
-    }
+    },
 
+    toggleSound: function() {
+        this.game.sound.mute = !this.game.sound.mute;
+        this.soundMuted = !this.soundMuted;
+        this.soundToggle.frame = 1 - this.soundToggle.frame;
+    }
 };
