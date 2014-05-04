@@ -45,7 +45,7 @@ App.Tower.prototype.init = function() {
 
 App.Tower.prototype.reset = function() {
     this.health = this.CONSTRUCTION_HEALTH;
-    this.build = false;
+    this.built = false;
     this.lastAttack = null;
 };
 

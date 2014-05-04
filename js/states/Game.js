@@ -26,13 +26,10 @@ App.Game = function(game) {
     this.towerHeight = 32;
     this.towerWidth  = 32;
 
-    this.centerX = 1000 / 2;
-    this.centerY = 800 / 2;
-    this.RadiusX = this.centerX - 80;
-    this.RadiusY = this.centerY - 120;
+    this.MIN_DISTANCE_TO_BUILD_TOWER = 30; // in pixels
+    this.MAX_WAVE_NUMBER = 3;
 
     this.numberWave;
-    this.MAX_WAVE_NUMBER = 3;
     this.waveTimer;
     this.lastWave;
     this.waveCooldown;
@@ -48,6 +45,9 @@ App.Game.prototype = {
     preload: function() {
         this.player = new App.Player(this.game, this.world.centerX, this.world.centerY);
         this.hud = new App.HUD(this.game, this.player);
+
+        this.RadiusX = this.world.centerX - 80;
+        this.RadiusY = this.world.centerY - 120;
     },
 
     create: function() {
@@ -252,18 +252,8 @@ App.Game.prototype = {
         // Collisions
         this.game.physics.arcade.collide(this.player, this.access_layer);
         this.game.physics.arcade.collide(this.player, this.enemiesList);
-        this.game.physics.arcade.collide(this.player, this.towersList,
-            function (player, tower) {
-                if (tower.alpha == 0.9) {
-                    tower.build = false;
-                    tower.alpha = 1;
-                    tower.init();
-                    player.setBuildMode(tower);
-                    player.stopMoving();
-                    this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION, player.endBuildMode, player, tower);
-                }
-            }, null, this
-        );
+        this.game.physics.arcade.collide(this.player, this.towersList);
+
         for (var i = this.enemiesList.length - 1; i >= 0; i--) {
             var enemy = this.enemiesList[i];
 
@@ -334,6 +324,25 @@ App.Game.prototype = {
             }
         }
 
+        for (var i = this.towersList.length - 1; i >= 0; i--) {
+            var tower = this.towersList[i];
+
+            if (!tower.exists || tower.built || tower.alpha != 0.9) {
+                continue;
+            }
+
+            if (this.game.physics.arcade.distanceBetween(this.player, tower) <= this.MIN_DISTANCE_TO_BUILD_TOWER) {
+                this.player.setBuildMode(tower);
+                this.player.stopMoving();
+
+                tower.built = false;
+                tower.alpha = 1;
+                tower.init();
+
+                this.time.events.add(Phaser.Timer.SECOND * tower.CONSTRUCTION_DURATION, this.player.endBuildMode, this.player, tower);
+            }
+        };
+
         // Sort all objects by `y` so they get displayed correctly.
         this.allObjectsGroup.sort('y', Phaser.Group.SORT_ASCENDING);
 
@@ -351,7 +360,7 @@ App.Game.prototype = {
     clickListener: function (element, pointer) {
         if (Phaser.Mouse.RIGHT_BUTTON === this.input.mouse.button) {
             this.cancelConstruction();
-            return false;
+            return;
         }
 
         if (this.gameEnded) {
@@ -466,8 +475,8 @@ App.Game.prototype = {
 
     createEnemy: function(createBoss) {
         var param = Math.random();
-        var newX = this.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);
-        var newY = this.centerY + (this.RadiusY + 50) * Math.sin(param * 2 * Math.PI);
+        var newX = this.world.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);
+        var newY = this.world.centerY + (this.RadiusY + 50) * Math.sin(param * 2 * Math.PI);
 
         var enemyRand = Math.random();
         var enemyType = enemyRand < 0.5 ? 'enemy1' : 'enemy2';
