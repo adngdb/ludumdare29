@@ -22,7 +22,7 @@ App.Game = function(game) {
     this.player;
     this.hud;
 
-    this.choosenTowerType = null;
+    this.towerToConstruct = null;
     this.towerHeight = 32;
     this.towerWidth  = 32;
 
@@ -70,6 +70,11 @@ App.Game.prototype = {
 
         this.allObjectsGroup.add(this.player);
 
+        // Create a bitmap layer to be used in tower construction mode to
+        // highlight where tower can or cannot be built.
+        this.highlightBitmap = this.game.add.bitmapData(this.world.width, this.world.height);
+        this.game.add.sprite(0, 0, this.highlightBitmap);
+
         this.hud.create();
 
         this.towersList = new App.Collection();
@@ -96,7 +101,12 @@ App.Game.prototype = {
         this.access_layer = this.map.createLayer('access_map');
         // this.access_layer.debug = true;
 
-        this.walkableTiles = [3];
+        // Tiles that units can walk on.
+        // 3 is the default walkable tile, loaded from the JSON file.
+        // 4 is used by Towers to define their immediate surroundings, where
+        // other Towers cannot be built.
+        this.walkableTiles = [3, 4];
+
         this.pathfinder = this.game.plugins.add(Phaser.Plugin.PathFinderPlugin);
         // this.pathfinder._easyStar.enableDiagonals();
         this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
@@ -115,8 +125,6 @@ App.Game.prototype = {
         if (this.player.health <= 0) {
             // The game is over, let's pause it until we go to the next state.
             this.gameEnded = true;
-
-            // Stop all movements.
             this.stopAllMovements();
 
             var deathTimer = this.game.time.create();
@@ -202,8 +210,6 @@ App.Game.prototype = {
                 if (this.numberWave > this.MAX_WAVE_NUMBER) {
                     // Max number of wave reached and ALL enemy killed => VICTORY !!!
                     this.gameEnded = true;
-
-                    // Stop all movements.
                     this.stopAllMovements();
 
                     // this.player.animations.play('victory');
@@ -268,22 +274,63 @@ App.Game.prototype = {
         this.hud.update();
 
         // tower creation
+
         if (this.player.isInConstructMode) {
             // is the player in construction mode ?
-            if (null == this.choosenTowerType) {
-                this.choosenTowerType = this.game.add.sprite(this.input.x, this.input.y, this.player.towerTypeToConstruct);
-                this.choosenTowerType.anchor.setTo(0.5, 3.0 / 4.0);
-                this.choosenTowerType.alpha = 0.5;
+            if (this.towerToConstruct === null) {
+                if (this.player.towerTypeToConstruct === 'tower1') {
+                    this.towerToConstruct = new App.Tower1(
+                        this.game,
+                        this.input.x,
+                        this.input.y,
+                        [],
+                        this.map
+                    );
+                }
+                else if (this.player.towerTypeToConstruct === 'tower2') {
+                    this.towerToConstruct = new App.Tower2(
+                        this.game,
+                        this.input.x,
+                        this.input.y,
+                        [],
+                        this.map
+                    );
+                }
+                // this.towerToConstruct = this.game.add.sprite(this.input.x, this.input.y, this.player.towerTypeToConstruct);
+                // this.towerToConstruct.anchor.setTo(0.5, 3.0 / 4.0);
+                this.towerToConstruct.alpha = 0.5;
+                this.allObjectsGroup.add(this.towerToConstruct);
             }
 
             var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
-            this.choosenTowerType.x = targetTile.worldX + targetTile.width / 2;
-            this.choosenTowerType.y = targetTile.worldY + targetTile.height / 2;
+            this.towerToConstruct.x = targetTile.worldX + targetTile.width / 2;
+            this.towerToConstruct.y = targetTile.worldY + targetTile.height / 2;
+
+            // Show green or red rectangles where the tower can or cannot be built.
+            this.highlightBitmap.context.clearRect(0, 0, this.world.width, this.world.height);
+
+            var tiles = this.towerToConstruct.getTiles();
+            for (var i = tiles.length - 1; i >= 0; i--) {
+                var tile = tiles[i];
+                var color = 'rgba(0, 255, 0, 0.1)';
+                if (tile.index === 1 || tile.index === 4) {
+                    // Unable to build here, mark it red.
+                    color = 'rgba(255, 0, 0, 0.1)';
+                }
+
+                this.highlightBitmap.context.fillStyle = color;
+                this.highlightBitmap.context.fillRect(tile.worldX, tile.worldY, tile.width, tile.height);
+            };
+            this.highlightBitmap.dirty = true;
         }
         else {
-            if (null != this.choosenTowerType) {
-                this.choosenTowerType.destroy();
-                this.choosenTowerType = null;
+            if (null != this.towerToConstruct) {
+                this.towerToConstruct.destroy();
+                this.towerToConstruct = null;
+
+                // Clear the highligh bitmap.
+                this.highlightBitmap.context.clearRect(0, 0, this.world.width, this.world.height);
+                this.highlightBitmap.dirty = true;
             }
         }
 
@@ -313,7 +360,7 @@ App.Game.prototype = {
             var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
             this.computePath(this.player, targetTile);
 
-            if (this.player.isInConstructMode && targetTile.index === 3) {
+            if (this.player.isInConstructMode && this.towerToConstruct.canBuild()) {
                 this.constructTower();
             }
         }
@@ -337,17 +384,19 @@ App.Game.prototype = {
             if (this.player.towerTypeToConstruct == 'tower1') {
                 newTower = new App.Tower1(
                     this.game,
-                    this.choosenTowerType.x,
-                    this.choosenTowerType.y,
-                    this.enemiesList
+                    this.towerToConstruct.x,
+                    this.towerToConstruct.y,
+                    this.enemiesList,
+                    this.map
                 );
             }
             else {
                 newTower = new App.Tower2(
                     this.game,
-                    this.choosenTowerType.x,
-                    this.choosenTowerType.y,
-                    this.enemiesList
+                    this.towerToConstruct.x,
+                    this.towerToConstruct.y,
+                    this.enemiesList,
+                    this.map
                 );
             }
             this.allObjectsGroup.add(newTower);
@@ -359,66 +408,40 @@ App.Game.prototype = {
             newTower.revive();
 
             // Move the tower to the given coordinates
-            newTower.x = this.choosenTowerType.x;
-            newTower.y = this.choosenTowerType.y;
+            newTower.x = this.towerToConstruct.x;
+            newTower.y = this.towerToConstruct.y;
         }
 
         // Add the tower to the collision map.
-        var tile = this.map.getTileWorldXY(this.choosenTowerType.x, this.choosenTowerType.y);
-        var surroundingTiles = [
-            tile,
-            this.map.getTileAbove(0, tile.x, tile.y),
-            this.map.getTileBelow(0, tile.x, tile.y),
-            this.map.getTileRight(0, tile.x, tile.y),
-            this.map.getTileLeft(0, tile.x, tile.y),
-        ];
-
-        for (var i = surroundingTiles.length - 1; i >= 0; i--) {
-            if (surroundingTiles[i]) {
-                surroundingTiles[i].index = 1;
-                surroundingTiles[i].collideDown = true;
-                surroundingTiles[i].collideLeft = true;
-                surroundingTiles[i].collideRight = true;
-                surroundingTiles[i].collideUp = true;
-            }
-        }
+        newTower.createCollisions();
         this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
 
         this.player.deactivateConstructMode();
         newTower.alpha = 0.9;
         newTower.setBaseBuildingFrame();
+
+        // Clear the highligh bitmap.
+        this.highlightBitmap.context.clearRect(0, 0, this.world.width, this.world.height);
+        this.highlightBitmap.dirty = true;
     },
 
     destructTower: function (tower) {
         tower.kill();
 
         // Remove the tower from the collision map.
-        var tile = this.map.getTileWorldXY(tower.x, tower.y);
-        var surroundingTiles = [
-            tile,
-            this.map.getTileAbove(0, tile.x, tile.y),
-            this.map.getTileBelow(0, tile.x, tile.y),
-            this.map.getTileRight(0, tile.x, tile.y),
-            this.map.getTileLeft(0, tile.x, tile.y),
-        ];
-
-        for (var i = surroundingTiles.length - 1; i >= 0; i--) {
-            if (surroundingTiles[i]) {
-                surroundingTiles[i].index = 3;
-                surroundingTiles[i].collideDown = false;
-                surroundingTiles[i].collideLeft = false;
-                surroundingTiles[i].collideRight = false;
-                surroundingTiles[i].collideUp = false;
-            }
-        }
+        tower.removeCollisions();
         this.pathfinder.setGrid(this.access_layer.layer.data, this.walkableTiles);
     },
 
     cancelConstruction: function () {
-        if (null != this.choosenTowerType) {
-            this.choosenTowerType.destroy();
-            this.choosenTowerType = null;
+        if (null != this.towerToConstruct) {
+            this.towerToConstruct.destroy();
+            this.towerToConstruct = null;
             this.player.deactivateConstructMode();
+
+            // Clear the highligh bitmap.
+            this.highlightBitmap.context.clearRect(0, 0, this.world.width, this.world.height);
+            this.highlightBitmap.dirty = true;
         }
     },
 

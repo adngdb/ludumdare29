@@ -71,7 +71,7 @@ App.HUD.prototype = {
     },
 
     chooseTower: function(element) {
-        this.player.setChoosenTowerType(element.type);
+        this.player.setChosenTowerType(element.type);
     },
 
     shortcutChooseTower1: function(key) {

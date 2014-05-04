@@ -1,5 +1,5 @@
-App.Tower1 = function(game, x, y, enemiesList) {
-    App.Tower.call(this, game, x, y, 'tower1', enemiesList);
+App.Tower1 = function(game, x, y, enemiesList, map) {
+    App.Tower.call(this, game, x, y, 'tower1', enemiesList, map);
 
     this.REACH_DISTANCE = 80; // in pixels
     this.DAMAGES_TO_ENEMY = 10; // in health points

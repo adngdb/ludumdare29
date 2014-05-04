@@ -1,7 +1,8 @@
-App.Tower = function(game, x, y, image, enemiesList) {
+App.Tower = function(game, x, y, image, enemiesList, map) {
     Phaser.Sprite.call(this, game, x, y, image);
 
     this.game = game;
+    this.map = map;
     this.enemiesList = enemiesList;
 
     this.REACH_DISTANCE = 80; // in pixels
@@ -59,4 +60,65 @@ App.Tower.prototype.buildingComplete = function() {
 
 App.Tower.prototype.hurt = function (damages) {
     this.health -= damages;
+};
+
+App.Tower.prototype.getTiles = function () {
+    var tile = this.map.getTileWorldXY(this.x, this.y);
+    var topTile = this.map.getTileAbove(0, tile.x, tile.y);
+    var bottomTile = this.map.getTileBelow(0, tile.x, tile.y);
+
+    return [
+        this.map.getTileLeft(0, topTile.x, topTile.y),
+        topTile,
+        this.map.getTileRight(0, topTile.x, topTile.y),
+        this.map.getTileLeft(0, tile.x, tile.y),
+        tile,
+        this.map.getTileRight(0, tile.x, tile.y),
+        this.map.getTileLeft(0, bottomTile.x, bottomTile.y),
+        bottomTile,
+        this.map.getTileRight(0, bottomTile.x, bottomTile.y),
+    ];
+};
+
+App.Tower.prototype.createCollisions = function () {
+    var tiles = this.getTiles();
+    var middleTileIndex = Math.floor(tiles.length / 2);
+
+    for (var i = tiles.length - 1; i >= 0; i--) {
+        var tile = tiles[i];
+        if (i === middleTileIndex) {
+            tile.index = 1;
+            tile.collideDown = true;
+            tile.collideLeft = true;
+            tile.collideRight = true;
+            tile.collideUp = true;
+        }
+        else {
+            tile.index = 4;
+        }
+    };
+};
+
+App.Tower.prototype.removeCollisions = function () {
+    var tiles = this.getTiles();
+
+    for (var i = tiles.length - 1; i >= 0; i--) {
+        var tile = tiles[i];
+        tile.index = 3;
+        tile.collideDown = false;
+        tile.collideLeft = false;
+        tile.collideRight = false;
+        tile.collideUp = false;
+    };
+};
+
+App.Tower.prototype.canBuild = function () {
+    var tiles = this.getTiles();
+
+    for (var i = tiles.length - 1; i >= 0; i--) {
+        if (tiles[i].index !== 3) {
+            return false;
+        }
+    }
+    return true;
 };

@@ -122,7 +122,7 @@ App.Player.prototype.tryHit = function (target) {
     }
 };
 
-App.Player.prototype.setChoosenTowerType = function (towerType) {
+App.Player.prototype.setChosenTowerType = function (towerType) {
     this.towerTypeToConstruct = towerType;
     this.activateConstructMode();
 };
