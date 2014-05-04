@@ -347,7 +347,7 @@ App.Game.prototype = {
     },
 
     clickListener: function (element, pointer) {
-        if (Phaser.Mouse.RIGHT_BUTTON == this.input.mouse.button) {
+        if (Phaser.Mouse.RIGHT_BUTTON === this.input.mouse.button) {
             this.cancelConstruction();
             return false;
         }
@@ -358,10 +358,12 @@ App.Game.prototype = {
 
         if (!this.player.building && !this.player.attacking) {
             var targetTile = this.map.getTileWorldXY(this.input.x, this.input.y);
-            this.computePath(this.player, targetTile);
-
             if (this.player.isInConstructMode && this.towerToConstruct.canBuild()) {
+                this.computePath(this.player, targetTile);
                 this.constructTower();
+            }
+            else if (!this.player.isInConstructMode) {
+                this.computePath(this.player, targetTile);
             }
         }
     },
