@@ -36,12 +36,12 @@ App.HUD.prototype = {
         chooseTower1Button.anchor.set(0.5);
         chooseTower1Button.scale.x = 0.5;
         chooseTower1Button.scale.y = 0.5;
-        chooseTower1Button.type = 'tower1';
+        chooseTower1Button.towerType = 'tower1';
         var chooseTower2Button = this.game.add.button(chooseTower1Button.x + 108, chooseTower1Button.y, 'buttonTower2', this.chooseTower, this);
         chooseTower2Button.anchor.set(0.5);
         chooseTower2Button.scale.x = 0.5;
         chooseTower2Button.scale.y = 0.5;
-        chooseTower2Button.type = 'tower2';
+        chooseTower2Button.towerType = 'tower2';
 
         var oneKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
         oneKey.onDown.add(this.shortcutChooseTower1, this);
@@ -73,22 +73,22 @@ App.HUD.prototype = {
         this.soundToggle.frame = 1 - this.soundToggle.frame;
     },
 
-    chooseTower: function (towerType) {
-        this.player.setChosenTowerType(towerType);
+    chooseTower: function (button) {
+        this.player.setChosenTowerType(button.towerType);
     },
 
     shortcutChooseTower1: function (key) {
-        this.chooseTower('tower1');
+        this.chooseTower({towerType: 'tower1'});
     },
 
     shortcutChooseTower2: function (key) {
-        this.chooseTower('tower2');
+        this.chooseTower({towerType: 'tower2'});
     },
 
     shortcutChooseTower3: function (key) {
         console.log("when implemented : change UI to build tower 3")
-        this.chooseTower('tower1');
-        // this.chooseTower('tower3');
+        this.chooseTower({towerType: 'tower1'});
+        // this.chooseTower({towerType: 'tower3'});
     },
 
     updateLifeGauge: function () {
