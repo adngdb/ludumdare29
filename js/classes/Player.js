@@ -25,6 +25,8 @@ App.Player = function (game, x, y) {
     this.animations.add('death-e', this.range(78, 84));
     this.animations.add('death-n', this.range(84, 90));
     this.animations.add('death-s', this.range(90, 96));
+    // Animation for victory
+    this.animations.add('victory', this.range(96, 102));
 
     this.animations.frame = 42;
 
@@ -125,4 +127,8 @@ App.Player.prototype.tryHit = function (target) {
 App.Player.prototype.setChosenTowerType = function (towerType) {
     this.towerTypeToConstruct = towerType;
     this.activateConstructMode();
+};
+
+App.Player.prototype.doVictoryDance = function () {
+    this.animations.play('victory', 10, true);
 };

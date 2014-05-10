@@ -212,9 +212,10 @@ App.Game.prototype = {
                     this.gameEnded = true;
                     this.stopAllMovements();
 
-                    // this.player.animations.play('victory');
+                    this.player.doVictoryDance();
+
                     var victoryTimer = this.game.time.create();
-                    victoryTimer.add(1000, function () {
+                    victoryTimer.add(2500, function () {
                         this.stopSound();
                         this.state.start('VictoryMenu', true, false, this.score);
                     }, this);
