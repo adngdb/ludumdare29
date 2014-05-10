@@ -11,12 +11,12 @@ App.Credits.prototype = {
 
         var style = { font: "32px custom", fill: "#794B23", align: "center" };
         var text1  = "Back";
-        this.towerShortcut = this.game.add.text(100, 720, text1, style);
-        this.towerShortcut.anchor.set(0.5);
-        this.towerShortcut.inputEnabled = true;
-        this.towerShortcut.events.onInputDown.add(this.returnToMainMenu, this);
-        this.towerShortcut.events.onInputOver.add(this.overBackButton, this);
-        this.towerShortcut.events.onInputOut.add(this.outBackButton, this);
+        this.backText = this.game.add.text(100, 720, text1, style);
+        this.backText.anchor.set(0.5);
+        this.backText.inputEnabled = true;
+        this.backText.events.onInputDown.add(this.returnToMainMenu, this);
+        this.backText.events.onInputOver.add(this.overBackButton, this);
+        this.backText.events.onInputOut.add(this.outBackButton, this);
     },
 
     toggleSound: function() {
@@ -26,11 +26,11 @@ App.Credits.prototype = {
     },
 
     overBackButton: function() {
-        this.towerShortcut.fill = "#F39E37";
+        this.backText.fill = "#F39E37";
     },
 
     outBackButton: function() {
-        this.towerShortcut.fill = "#794B23";
+        this.backText.fill = "#794B23";
     },
 
     returnToMainMenu: function() {
