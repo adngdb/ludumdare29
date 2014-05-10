@@ -9,8 +9,8 @@ App.Boot.prototype = {
     preload: function () {
 
         //  Here we load the assets required for our preloader (in this case a background and a loading bar)
-        this.load.image('preloaderBackground', 'assets/interface/preloader_background.gif');
-        this.load.image('preloaderBar', 'assets/interface/preloader_bar.png');
+        this.load.image('preloaderBackground', 'assets/interface/fond_loader_screen.png');
+        this.load.image('preloaderBar', 'assets/interface/bar_preloader.png');
         this.load.audio('theme_menu', 'assets/sfx/theme_menu.ogg');
 
     },
