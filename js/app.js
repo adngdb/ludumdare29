@@ -7,6 +7,7 @@ window.onload = function() {
     game.state.add('Game',      App.Game);
     game.state.add('DeathMenu', App.DeathMenu);
     game.state.add('VictoryMenu', App.VictoryMenu);
+    game.state.add('Credits', App.Credits);
 
 
     game.state.start('Boot');

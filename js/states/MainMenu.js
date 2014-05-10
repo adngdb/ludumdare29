@@ -10,16 +10,26 @@ App.MainMenu.prototype = {
         this.soundToggle.scale.set(0.5, 0.5);
 
         // create a new bitmap data object
-        var bitmapButton = this.game.add.bitmapData(300,64);
-
+        var bitmapStartButton = this.game.add.bitmapData(300,64);
         // draw to the canvas context like normal
-        bitmapButton.ctx.beginPath();
-        bitmapButton.ctx.rect(0, 0, 300, 64);
+        bitmapStartButton.ctx.beginPath();
+        bitmapStartButton.ctx.rect(0, 0, 300, 64);
 
         // use the bitmap data as the texture for the sprite
-        var startButton = this.game.add.sprite(360, 360, bitmapButton);
+        var startButton = this.game.add.sprite(360, 360, bitmapStartButton);
         startButton.inputEnabled = true;
         startButton.events.onInputDown.add(this.startGame, this);
+
+        // create a new bitmap data object
+        var bitmapCreditsButton = this.game.add.bitmapData(300,64);
+        // draw to the canvas context like normal
+        bitmapCreditsButton.ctx.beginPath();
+        bitmapCreditsButton.ctx.rect(0, 0, 300, 64);
+
+        // use the bitmap data as the texture for the sprite
+        var creditsButton = this.game.add.sprite(360, 465, bitmapCreditsButton);
+        creditsButton.inputEnabled = true;
+        creditsButton.events.onInputDown.add(this.openCredits, this);
 
         this.menuSound = this.game.add.audio('theme_menu');
         this.menuSound.loop = true;
@@ -39,5 +49,9 @@ App.MainMenu.prototype = {
         this.game.sound.mute = !this.game.sound.mute;
         this.soundMuted = !this.soundMuted;
         this.soundToggle.frame = 1 - this.soundToggle.frame;
+    },
+
+    openCredits: function() {
+        this.game.state.start('Credits');
     }
 };
