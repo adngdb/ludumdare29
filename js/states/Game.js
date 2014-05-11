@@ -181,14 +181,14 @@ App.Game.prototype = {
         // check Wave : End of game ? new one ?
         if (!this.creatingWave) {
             // compute : are there any enemy alive ?
-            var index = this.enemiesList.length - 1;
-            var enemy = this.enemiesList[index];
             var win = true;
-            while (win && index >= 0) {
-                win = !enemy.exists;
-                index--;
-                enemy = this.enemiesList[index];
+            for (var i = this.enemiesList.length - 1; i >= 0; i--) {
+                if (this.enemiesList[i].exists) {
+                    win = false;
+                    break;
+                }
             }
+
             if (win) {
                 // if all enemy are dead
                 if (this.musicFight.volume >= 0) {
