@@ -8,7 +8,7 @@ App.Game = function(game) {
     this.input;     //the global input manager (you can access this.input.keyboard, this.input.mouse, as well from it)
     this.load;      //for preloading assets
     this.math;      //lots of useful common math operations
-    this.walkSound;     //the sound manager - add a sound, play one, set-up markers, etc
+    this.sound;     //the sound manager - add a sound, play one, set-up markers, etc
     this.stage;     //the game stage
     this.time;      //the clock
     this.tweens;    //the tween manager
@@ -22,17 +22,26 @@ App.Game = function(game) {
     this.player;
     this.hud;
 
-    this.towerToConstruct = null;
-    this.towerHeight = 32;
-    this.towerWidth  = 32;
-
     this.MIN_DISTANCE_TO_BUILD_TOWER = 30; // in pixels
-    this.MAX_WAVE_NUMBER = 3;
+    this.WAVE_COOLDOWN = 10; // in seconds
 
-    this.numberWave;
+    this.WAVES = [
+        // See ENEMIES_MAP for the order of enemy types.
+        [5, 0, 0],
+        [5, 2, 0],
+        [6, 4, 0],
+        [9, 6, 0],
+        [14, 10, 1],
+    ];
+
+    this.ENEMIES_MAP = [
+        App.Enemy1,
+        App.Enemy2,
+        App.Boss,
+    ];
+
     this.waveTimer;
     this.lastWave;
-    this.waveCooldown;
     this.creatingWave;
 
     this.score;
@@ -88,9 +97,9 @@ App.Game.prototype = {
         this.musicRelax.volume = 0;
         this.firstLoop = false;
 
+        this.towerToConstruct = null;
         this.waveTimer = null;
-        this.numberWave = 1;
-        this.waveCooldown = 5;
+        this.currentWaveIndex = 0;
         this.lastWave = this.game.time.now;
         this.creatingWave = false;
 
@@ -207,7 +216,7 @@ App.Game.prototype = {
                     }
                 }
 
-                if (this.numberWave > this.MAX_WAVE_NUMBER) {
+                if (this.currentWaveIndex >= this.WAVES.length) {
                     // Max number of wave reached and ALL enemy killed => VICTORY !!!
                     this.gameEnded = true;
                     this.stopAllMovements();
@@ -224,7 +233,7 @@ App.Game.prototype = {
                 }
                 else {
                     // create next wave
-                    if (!this.lastWave || this.game.time.elapsedSecondsSince(this.lastWave) > this.waveCooldown) {
+                    if (!this.lastWave || this.game.time.elapsedSecondsSince(this.lastWave) > this.WAVE_COOLDOWN) {
                         this.createNewWave();
                         this.lastWave = this.game.time.now;
                     }
@@ -457,56 +466,55 @@ App.Game.prototype = {
         }
     },
 
+    prepareNextWave: function () {
+        var wave = this.WAVES[this.currentWaveIndex];
+
+        this.currentWavePile = [];
+
+        for (var i = wave.length - 1; i >= 0; i--) {
+            for (var j = wave[i] - 1; j >= 0; j--) {
+                this.currentWavePile.push(i);
+            }
+        }
+
+        // TODO
+        // this.currentWavePile.shuffle();
+    },
+
     createNewWave: function() {
         if (this.waveTimer !== null) this.waveTimer.destroy();
 
-        var numberEnemiesInWave = this.numberWave * 5;
+        this.prepareNextWave();
+        var numberEnemiesInWave = this.currentWavePile.length;
 
         this.waveTimer = this.game.time.create();
-        this.waveTimer.repeat(500, numberEnemiesInWave, this.createEnemy, this, false);
+        this.waveTimer.repeat(500, numberEnemiesInWave, this.createEnemy, this);
         this.waveTimer.start();
 
-        if (this.MAX_WAVE_NUMBER <= this.numberWave) {
-            this.game.time.events.add(500 * Math.round(numberEnemiesInWave / 2), this.createEnemy, this, true);
-        }
-
         this.creatingWave = true;
-        this.numberWave++;
+        this.currentWaveIndex++;
     },
 
-    createEnemy: function(createBoss) {
+    createEnemy: function() {
         var param = Math.random();
         var newX = this.world.centerX + (this.RadiusX + 50) * Math.cos(param * 2 * Math.PI);
         var newY = this.world.centerY + (this.RadiusY + 50) * Math.sin(param * 2 * Math.PI);
 
-        var enemyRand = Math.random();
-        var enemyType = enemyRand < 0.5 ? 'enemy1' : 'enemy2';
+        var enemyTypeIndex = this.currentWavePile.pop();
+        var enemyType = this.ENEMIES_MAP[enemyTypeIndex];
+
         var newEnemy = null;
-        var index = this.enemiesList.length -1;
-        while (index >= 0) {
-            var currEnemy = this.enemiesList[index];
-            if (!currEnemy.exists && currEnemy.key === enemyType) {
+
+        for (var i = this.enemiesList.length - 1; i >= 0; i--) {
+            var currEnemy = this.enemiesList[i];
+            if (!currEnemy.exists && currEnemy instanceof enemyType) {
                 newEnemy = currEnemy;
                 break;
             }
-            index--;
-        }
-        if (createBoss) {
-            newEnemy = new App.Boss(this.game, newX, newY, 'boss', this.player);
-            this.allObjectsGroup.add(newEnemy);
-            this.enemiesList.push(newEnemy);
         }
 
         if (newEnemy === null) {
-            if (enemyType == 'enemy1') {
-                newEnemy = new App.Enemy1(this.game, newX, newY, this.player);
-            }
-            else if (enemyType == 'enemy2') {
-                newEnemy = new App.Enemy2(this.game, newX, newY, this.player, this.towersList);
-            }
-            else {
-                console.log("SHOULD NEVER HAPPEN");
-            }
+            newEnemy = new enemyType(this.game, newX, newY, this.player, this.towersList);
             this.allObjectsGroup.add(newEnemy);
             this.enemiesList.push(newEnemy);
         }

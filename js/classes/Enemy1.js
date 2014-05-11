@@ -1,4 +1,4 @@
-App.Enemy1 = function(game, x, y, target) {
+App.Enemy1 = function(game, x, y, target, towers) {
     App.Enemy.call(this, game, x, y, 'enemy1');
 
     this.target = target;
