@@ -8,6 +8,9 @@ App.Credits.prototype = {
 
         this.soundToggle = this.game.add.button(this.game.width - 74, 0, 'muteToggle', this.toggleSound, this);
         this.soundToggle.scale.set(0.5, 0.5);
+        if (this.game.sound.mute) {
+            this.soundToggle.frame = 1;
+        }
 
         var style = { font: "32px custom", fill: "#794B23", align: "center" };
         var text1  = "Back";

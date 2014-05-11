@@ -8,6 +8,9 @@ App.MainMenu.prototype = {
 
         this.soundToggle = this.game.add.button(this.game.width - 74, 0, 'muteToggle', this.toggleSound, this);
         this.soundToggle.scale.set(0.5, 0.5);
+        if (this.game.sound.mute) {
+            this.soundToggle.frame = 1;
+        }
 
         var startButtonTexture = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'button');
         startButtonTexture.anchor.set(0.5, 0.5);
@@ -25,7 +28,7 @@ App.MainMenu.prototype = {
         startButton.events.onInputOver.add(this.overButton, this);
         startButton.events.onInputOut.add(this.outButton, this);
 
-        var style = { font: "64px custom", fill: "#F39E37", align: "center" };
+        var style = { font: "64px custom", fill: "#794B23", align: "center" };
 
         this.startText = this.game.add.text(startButtonTexture.x, startButtonTexture.y, "START", style);
         this.startText.anchor.set(0.5, 0.5);
@@ -74,7 +77,7 @@ App.MainMenu.prototype = {
     },
 
     overButton: function(element) {
-        var fillColor = "#794B23";
+        var fillColor = "#F39E37";
         switch(element.name) {
             case "start":
                 this.startText.fill = fillColor;
@@ -86,7 +89,7 @@ App.MainMenu.prototype = {
     },
 
     outButton: function(element) {
-        var fillColor = "#F39E37";
+        var fillColor = "#794B23";
         switch(element.name) {
             case "start":
                 this.startText.fill = fillColor;
